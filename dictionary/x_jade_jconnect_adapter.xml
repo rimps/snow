@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Adapter" max_length="40" name="x_jade_jconnect_adapter" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Application" max_length="32" name="application" reference="x_jade_jconnect_application" type="reference"/>
+        <element label="Adapter Description" max_length="80" name="description" type="string"/>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="Direction" max_length="40" name="direction" type="choice">
+            <choice>
+                <element label="Inbound" value="inbound"/>
+                <element label="Outbound" value="outbound"/>
+            </choice>
+        </element>
+        <element label="Dynamic Table Details" max_length="100" name="dynamic_table_details" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Mapped to" max_length="80" name="mapped_to" type="table_name"/>
+        <element calculation="answer = &quot;&quot;;" display="true" label="Name" max_length="40" name="name" type="string"/>
+        <element label="Source Object" max_length="40" name="source_object" type="string"/>
+        <element label="Target Object" max_length="40" name="target_object" type="string"/>
+        <index name="index">
+            <element name="application"/>
+        </index>
+    </element>
+</database>

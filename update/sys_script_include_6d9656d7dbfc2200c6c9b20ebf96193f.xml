@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.Connection_Status_Service</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Connection_Status_Service</name>
+        <script><![CDATA[var Connection_Status_Service = Class.create();
+var jadeConnectLogger;
+var jadeUtility;
+var connectionStatusDao;
+Connection_Status_Service.prototype = {
+	initialize: function() {
+		jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+		jadeUtility = new global.JadeUtility();
+		connectionStatusDao = new global.Connection_Status_DAO();
+	},
+	/*
+	*@connectionService.
+	* Input : current object passed from Businessrule.
+	* Output : sysId of the saved record.
+	* Description :  It create one scheduled job by calling the DAO layer. And return the sysId.
+	*/
+	connectionService: function(inputObject){
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Entry in connectionService.");
+		var userName = '';
+		var password = '';
+		var connName = inputObject.connection.name;
+		var corre = new GlideRecord('x_jade_jconnect_connection');
+		corre.addQuery('name',inputObject.connection.name);
+		corre.query();
+		while(corre.next()){
+			userName = corre.username;
+			password = corre.password;
+		}
+		var gr =new GlideRecord('sysauto_script');
+		gr.initialize();
+		if(jadeUtility.indexOf(connName," ") != -1)
+			connName = connName.toString().split(' ').join('_');
+		gr.name = connName +'_Status';
+		gr.active = true;
+		gr.run_type=inputObject.run_type;
+		this.setConditionParam(gr,inputObject);
+		var script =  'var conName = "'+inputObject.connection.name+'";var obj = new global.VerifyAuth();var result=obj.verify_auth("'+userName+'","'+password+'"); if(result == false){var corre = new GlideRecord("x_jade_jconnect_connection"); corre.addQuery("name",conName);corre.query(); if(corre.next()){corre.status = "Not Authenticated";corre.update(); var gr = new GlideRecord("x_jade_jconnect_connection_status_update"); gr.addQuery("connection.name",conName);gr.query(); if(gr.next()){gs.eventQueue("x_jade_jconnect.status.notauthenticated",gr,gr.email);} }}';
+		gr.script = script;
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Call the DAO layer to save object.");
+		var sysId = connectionStatusDao.insertObject(gr);
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Sysid of the ScheduledJob : "+sysId);
+		return sysId;
+	},
+	
+	/*
+	* @ setConditionParam : 
+	* Input : current glide record and object from which get parameter.
+	* Output : glide record.
+	* Description : It will set the time parameter according to the run_type.
+	*/
+	setConditionParam: function(gr,inputObject){
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Entry in setConditionParameter.");
+		if(inputObject.run_type == 'daily'){
+			gr.run_time=inputObject.time;
+		}else if(inputObject.run_type == 'weekly'){
+			gr.run_dayofweek = inputObject.run_dayofweek;
+			gr.run_time = inputObject.run_time;
+		}else if(inputObject.run == 'monthly'){
+			gr.run_dayofmonth = inputObject.run_dayofmonth;
+			gr.run_time = inputObject.run_time;
+		}else if(inputObject.run == 'periodically'){
+			gr.run_period = inputObject.run_period
+			gr.run_start = inputObject.run_start;
+		}else if(inputObject.run == 'once'){
+			gr.run_start = inputObject.run_start;
+		}
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : After setting the parameter.");
+		return gr;
+	},
+	/*
+	* @scheduledJobDelete:
+	* Input : current object passed from businessrule.
+	* Outout : None
+	* Description : It will delete the scheduled job of the respective Connection Status entry.
+	*/
+	scheduledJobDelete: function(inputObject){
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Entry in scheduledJobDelete.");
+		var connName = inputObject.connection.name;
+		if(jadeUtility.indexOf(connName," ") != -1)
+			connName = connName.toString().split(' ').join('_');
+		var schJobName = connName+"_Status";
+		var gr = new GlideRecord('sysauto_script');
+		gr.addQuery('name',schJobName);
+		gr.query();
+		while(gr.next()){
+			connectionStatusDao.deleteObject(gr);
+		}
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Successfully Deleted Scheduled job.");
+	},
+	/*
+	* @scheduledJobTimeUpdated :
+	* Input : current object passed from businessrule.
+	* output : None
+	* Description : This function will update the time in scheduledjob, while any updation in Connection Status form.
+	*/
+	scheduledJobTimeUpdate:function(inputObject){
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Entry in scheduledJobTimeUpdate.");
+		
+		var connName = current.connection.name;
+		if(jadeUtility.indexOf(connName," ") != -1)
+			connName = connName.toString().split(' ').join('_');
+		
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Scheduled job is : "+connName+"_Status");
+		var gr =new GlideRecord('sysauto_script');
+		gr.addQuery('name',connName+"_Status");
+		gr.query();
+		while(gr.next()){
+			gr.active = current.active;
+			gr.run_type=current.run_type;
+			this.setConditionParam(gr,inputObject);
+			connectionStatusDao.updateObject(gr);
+		}				
+		jadeConnectLogger.info("JadeConnect : Connection_Status_Service : Successfully Updated ScheduledJob time.");
+	},
+	
+	type: 'Connection_Status_Service'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>chandra</sys_created_by>
+        <sys_created_on>2016-07-29 05:59:22</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>6d9656d7dbfc2200c6c9b20ebf96193f</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>Connection_Status_Service</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_6d9656d7dbfc2200c6c9b20ebf96193f</sys_update_name>
+        <sys_updated_by>chandra</sys_updated_by>
+        <sys_updated_on>2016-07-29 10:32:53</sys_updated_on>
+    </sys_script_include>
+</record_update>

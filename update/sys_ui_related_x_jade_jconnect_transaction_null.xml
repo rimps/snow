@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_related sys_domain="global" table="x_jade_jconnect_transaction" version="2" view="">
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Transaction - Default view" name="x_jade_jconnect_transaction" related_list="NULL" sys_domain="global" view="Default view">7d41145f0f033200194c87ece1050e5b</list_id>
+            <order_by/>
+            <position>0</position>
+            <related_list>x_jade_jconnect_transaction_detail.transaction</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-04 12:46:48</sys_created_on>
+            <sys_id>7141145f0f033200194c87ece1050e5c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-04 12:46:48</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Transaction - Default view" name="x_jade_jconnect_transaction" related_list="NULL" sys_domain="global" view="Default view">7d41145f0f033200194c87ece1050e5b</list_id>
+            <order_by/>
+            <position>1</position>
+            <related_list>u_x_jade_jconnect_netsuite_asset_to_cmdb_ci_data_fields.transaction</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-04 12:46:48</sys_created_on>
+            <sys_id>3541145f0f033200194c87ece1050e5c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-04 12:46:48</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list action="INSERT_OR_UPDATE">
+            <calculated_name>Transaction - Default view</calculated_name>
+            <filter/>
+            <name>x_jade_jconnect_transaction</name>
+            <order_by/>
+            <position/>
+            <related_list/>
+            <sys_class_name>sys_ui_related_list</sys_class_name>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-04 12:46:48</sys_created_on>
+            <sys_customer_update>true</sys_customer_update>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>7d41145f0f033200194c87ece1050e5b</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Transaction - Default view</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_ui_related_x_jade_jconnect_transaction_null</sys_update_name>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-04 12:46:48</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_related_list>
+    </sys_ui_related>
+</record_update>

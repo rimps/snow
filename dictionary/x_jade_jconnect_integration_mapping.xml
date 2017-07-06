@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Integration Mapping" max_length="40" name="x_jade_jconnect_integration_mapping" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Default value" max_length="40" name="default_value" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Integration" max_length="32" name="integration" reference="x_jade_jconnect_integration" type="reference"/>
+        <element label="Seeded" max_length="40" name="seeded" type="boolean"/>
+        <element dependent="source_table" dependent_on_field="source_table" label="Source" max_length="80" name="source" type="string" use_dependent_field="true"/>
+        <element calculation="answer = &quot;&quot;;" dependent="source_table" dependent_on_field="source_table" display="true" label="Source Field" max_length="80" name="source_field" type="field_name" use_dependent_field="true"/>
+        <element calculation="answer = &quot;&quot;;" label="Source Label" max_length="40" name="source_label" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Source Table" max_length="80" name="source_table" type="table_name"/>
+        <element dependent="target_table" dependent_on_field="target_table" label="Target" max_length="80" name="target" type="string" use_dependent_field="true"/>
+        <element calculation="answer = &quot;&quot;;" dependent="target_table" dependent_on_field="target_table" label="Target Field" max_length="80" name="target_field" type="field_name" use_dependent_field="true"/>
+        <element calculation="answer = &quot;&quot;;" label="Target Label" max_length="40" name="target_label" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Target Table" max_length="80" name="target_table" type="table_name"/>
+        <index name="index">
+            <element name="integration"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_list parent="" relationship="" sys_domain="global" table="x_jade_jconnect_transaction_detail_transformation_status" version="2" view="">
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>number</element>
+            <list_id display_value="x_jade_jconnect_transaction_detail_transformation_status" element="NULL" name="x_jade_jconnect_transaction_detail_transformation_status" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">270dbb020f757200194c87ece1050e06</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>0</position>
+            <sum>false</sum>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-31 05:26:03</sys_created_on>
+            <sys_id>2b0dbb020f757200194c87ece1050e06</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-31 05:26:03</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>error</element>
+            <list_id display_value="x_jade_jconnect_transaction_detail_transformation_status" element="NULL" name="x_jade_jconnect_transaction_detail_transformation_status" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">270dbb020f757200194c87ece1050e06</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>1</position>
+            <sum>false</sum>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-31 05:26:03</sys_created_on>
+            <sys_id>ab0dbb020f757200194c87ece1050e06</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-31 05:26:03</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>field</element>
+            <list_id display_value="x_jade_jconnect_transaction_detail_transformation_status" element="NULL" name="x_jade_jconnect_transaction_detail_transformation_status" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">270dbb020f757200194c87ece1050e06</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>2</position>
+            <sum>false</sum>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-31 05:26:03</sys_created_on>
+            <sys_id>2f0dbb020f757200194c87ece1050e06</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-31 05:26:03</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>result</element>
+            <list_id display_value="x_jade_jconnect_transaction_detail_transformation_status" element="NULL" name="x_jade_jconnect_transaction_detail_transformation_status" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">270dbb020f757200194c87ece1050e06</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>3</position>
+            <sum>false</sum>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-31 05:26:03</sys_created_on>
+            <sys_id>af0dbb020f757200194c87ece1050e06</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-31 05:26:03</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>status</element>
+            <list_id display_value="x_jade_jconnect_transaction_detail_transformation_status" element="NULL" name="x_jade_jconnect_transaction_detail_transformation_status" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">270dbb020f757200194c87ece1050e06</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>4</position>
+            <sum>false</sum>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-31 05:26:03</sys_created_on>
+            <sys_id>230dbb020f757200194c87ece1050e07</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-31 05:26:03</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>transaction_detail</element>
+            <list_id display_value="x_jade_jconnect_transaction_detail_transformation_status" element="NULL" name="x_jade_jconnect_transaction_detail_transformation_status" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">270dbb020f757200194c87ece1050e06</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>5</position>
+            <sum>false</sum>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-31 05:26:03</sys_created_on>
+            <sys_id>a30dbb020f757200194c87ece1050e07</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-31 05:26:03</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>transformation</element>
+            <list_id display_value="x_jade_jconnect_transaction_detail_transformation_status" element="NULL" name="x_jade_jconnect_transaction_detail_transformation_status" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">270dbb020f757200194c87ece1050e06</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>6</position>
+            <sum>false</sum>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-31 05:26:03</sys_created_on>
+            <sys_id>270dbb020f757200194c87ece1050e07</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-31 05:26:03</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element/>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <name>x_jade_jconnect_transaction_detail_transformation_status</name>
+            <parent/>
+            <position/>
+            <relationship/>
+            <sum>false</sum>
+            <sys_class_name>sys_ui_list</sys_class_name>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-31 05:26:03</sys_created_on>
+            <sys_customer_update>true</sys_customer_update>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>270dbb020f757200194c87ece1050e06</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_jade_jconnect_transaction_detail_transformation_status</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_ui_list_x_jade_jconnect_transaction_detail_transformation_status_null</sys_update_name>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-31 05:26:03</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_list>
+    </sys_ui_list>
+</record_update>

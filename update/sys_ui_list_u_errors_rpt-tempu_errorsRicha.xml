@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_list parent="" relationship="" sys_domain="global" table="u_errors" version="2" view="rpt-tempu_errorsRicha">
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>u_error_no</element>
+            <list_id display_value="u_errors" element="NULL" name="u_errors" parent="NULL" relationship="NULL" sys_domain="global" view="4b566e760f937200194c87ece1050efc">9f566e760f937200194c87ece1050efc</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>0</position>
+            <sum>false</sum>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-15 20:36:53</sys_created_on>
+            <sys_id>93566e760f937200194c87ece1050efd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-15 20:36:53</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>u_error_description</element>
+            <list_id display_value="u_errors" element="NULL" name="u_errors" parent="NULL" relationship="NULL" sys_domain="global" view="4b566e760f937200194c87ece1050efc">9f566e760f937200194c87ece1050efc</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>1</position>
+            <sum>false</sum>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-15 20:36:53</sys_created_on>
+            <sys_id>17566e760f937200194c87ece1050efd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-15 20:36:53</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>u_integration</element>
+            <list_id display_value="u_errors" element="NULL" name="u_errors" parent="NULL" relationship="NULL" sys_domain="global" view="4b566e760f937200194c87ece1050efc">9f566e760f937200194c87ece1050efc</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>2</position>
+            <sum>false</sum>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-15 20:36:53</sys_created_on>
+            <sys_id>97566e760f937200194c87ece1050efd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-15 20:36:53</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>u_response</element>
+            <list_id display_value="u_errors" element="NULL" name="u_errors" parent="NULL" relationship="NULL" sys_domain="global" view="4b566e760f937200194c87ece1050efc">9f566e760f937200194c87ece1050efc</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>3</position>
+            <sum>false</sum>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-15 20:36:53</sys_created_on>
+            <sys_id>1b566e760f937200194c87ece1050efd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-15 20:36:53</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>sys_created_on</element>
+            <list_id display_value="u_errors" element="NULL" name="u_errors" parent="NULL" relationship="NULL" sys_domain="global" view="4b566e760f937200194c87ece1050efc">9f566e760f937200194c87ece1050efc</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>4</position>
+            <sum>false</sum>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-15 20:36:53</sys_created_on>
+            <sys_id>9b566e760f937200194c87ece1050efd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-15 20:36:53</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element/>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <name>u_errors</name>
+            <parent/>
+            <position/>
+            <relationship/>
+            <sum>false</sum>
+            <sys_class_name>sys_ui_list</sys_class_name>
+            <sys_created_by>Richa</sys_created_by>
+            <sys_created_on>2017-06-15 20:36:53</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>9f566e760f937200194c87ece1050efc</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name/>
+            <sys_package/>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name/>
+            <sys_updated_by>Richa</sys_updated_by>
+            <sys_updated_on>2017-06-15 20:36:53</sys_updated_on>
+            <sys_user/>
+            <view display_value="Rpt-tempu_errorsricha" name="rpt-tempu_errorsRicha">4b566e760f937200194c87ece1050efc</view>
+            <view_name/>
+        </sys_ui_list>
+    </sys_ui_list>
+</record_update>

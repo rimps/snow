@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.Refresh_Integration_Source_Service</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Refresh_Integration_Source_Service</name>
+        <script><![CDATA[var Refresh_Integration_Source_Service = Class.create();
+var jadeConnectLogger;
+var jadeUtility;
+var refreshIntDao;
+Refresh_Integration_Source_Service.prototype = {
+	initialize: function() {
+		jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+		jadeUtility = new global.JadeUtility();
+		refreshIntDao = new global.Refresh_Integration_Source_DAO();
+	},
+	/*
+	*@refreshService:
+	* Input : current object passed from business rule.
+	* Output : sysId of the saved scheduledjob.
+	* Description : Save the Scheduledjob for the Refresh Integration entry.
+	*/
+	refreshService: function(inputObject){
+		jadeConnectLogger.info("JadeConnect : Refresh_Integration_Source_Service : Entry in refreshService.");
+		var appName = inputObject.integration.adapter.application.name;
+		var adpname = inputObject.integration.adapter.name;
+		var tablename = inputObject.integration.tablename;
+		var integrationName = inputObject.integration.name;
+		
+		var gr =new GlideRecord('sysauto_script');
+		gr.initialize();
+		if(jadeUtility.indexOf(integrationName," ") != -1)
+			integrationName = integrationName.toString().split(' ').join('_');
+		gr.name = integrationName +'_Refresh';
+		gr.active = true;
+		gr.run_type=inputObject.run;
+		this.setConditionalParam(gr,inputObject);
+		var script =  'var email = "'+inputObject.email+'";var obj = new x_jade_jconnect.Refresh_Integration_Source_Service();var response = obj.fieldCalculation("'+tablename+'","'+appName+'","'+adpname+'"); if(response == "true"){var ges = new GlideRecord("sys_db_object");ges.addQuery("name","'+inputObject.getTableName()+'");ges.query();if(ges.next()){gs.eventQueue("x_jade_jconnect.integration.refreshsourc",ges,email);}}';
+		gr.script = script;
+		var sysId = refreshIntDao.insertObject(gr);
+		jadeConnectLogger.info("JadeConnect : Refresh_Integration_Source_Service : Successfully insert the scheduled job.");
+		return sysId;
+	},
+	
+	/*
+	*@setConditionalParam:
+	* Input : gliderecord to which value will set, input object from business rule.
+	* Output : gliderecord with all parameter set..
+	* Description : Set the time accordint to the run_type of scheduled job.
+	*/
+	
+	setConditionalParam: function(gr,inputObject){
+		jadeConnectLogger.info("JadeConnect : Refresh_Integration_Source_Service : Entry inside setConditionalParam.");
+		if(current.run == 'daily'){
+			gr.run_time=current.time;
+		}else if(current.run == 'weekly'){
+			gr.run_dayofweek = current.dayofweek;
+			gr.run_time = current.time;
+		}else if(current.run == 'monthly'){
+			gr.run_dayofmonth = current.dayofmonth;
+			gr.run_time = current.time;
+		}else if(current.run == 'periodically'){
+			gr.run_period = current.repeat_interval;
+			gr.run_start = current.starting;
+		}else if(current.run == 'once'){
+			gr.run_start = current.starting;
+		}
+		jadeConnectLogger.info("JadeConnect : Refresh_Integration_Source_Service : Exit from setConditionalParam after setting value.");
+		return gr;
+	},
+	
+	/*
+	*@deleteScheduledJob:
+	* Input : Current object passed from Businessrule.
+	* Output : None.
+	* Description : Delete the scheduledjob associated with Integrationflow.
+	*/
+	deleteScheduledJob: function(inputObject){
+		jadeConnectLogger.info("JadeConnect : Refresh_Integration_Source_Service : Entry inside deleteScheduledJob.");
+		var intName = inputObject.integration.name;
+		if(jadeUtility.indexOf(intName," ") != -1)
+			intName = intName.toString().split(' ').join('_');
+		var schJobName = intName+"_Refresh";
+		var gr = new GlideRecord('sysauto_script');
+		gr.addQuery('name',schJobName);
+		gr.query();
+		while(gr.next()){
+			refreshIntDao.deleteObject(gr);
+		}
+		jadeConnectLogger.info("JadeConnect : Refresh_Integration_Source_Service : Successfully deleted ScheduledJob.");
+	},
+	
+	/*
+	*@updateScheduledTime:
+	* Input : Current object passed from Businessrule.
+	* Output : None.
+	* Description : Update the scheduledjob associated with Integrationflow if update the time.
+	*/
+	updateScheduledTime: function(inputObject){
+		jadeConnectLogger.info("JadeConnect : Refresh_Integration_Source_Service : Entry inside updateScheduledTime.");
+		var integrationName = inputObject.integration.name;
+		if(jadeUtility.indexOf(integrationName," ") != -1)
+			integrationName = integrationName.toString().split(' ').join('_');
+		
+		var gr =new GlideRecord('sysauto_script');
+		gr.addQuery('name',integrationName+"_Refresh");
+		gr.query();
+		while(gr.next()){
+			gr.active = current.active;
+			gr.run_type=current.run;
+			this.setConditionalParam(gr,inputObject);
+			refreshIntDao.updateObject(gr);
+		}
+		jadeConnectLogger.info("JadeConnect : Refresh_Integration_Source_Service : Successfully updated.");
+		
+	},
+	
+	type: 'Refresh_Integration_Source_Service'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>chandra</sys_created_by>
+        <sys_created_on>2016-07-29 07:46:08</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>085d225fdbfc2200c6c9b20ebf9619cf</sys_id>
+        <sys_mod_count>11</sys_mod_count>
+        <sys_name>Refresh_Integration_Source_Service</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_085d225fdbfc2200c6c9b20ebf9619cf</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2016-08-01 11:21:06</sys_updated_on>
+    </sys_script_include>
+</record_update>

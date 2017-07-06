@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_ui_policy_action">
+    <sys_ui_policy_action action="INSERT_OR_UPDATE">
+        <disabled>true</disabled>
+        <field>mapped_to</field>
+        <mandatory>ignore</mandatory>
+        <sys_class_name>sys_ui_policy_action</sys_class_name>
+        <sys_created_by>Guneet</sys_created_by>
+        <sys_created_on>2016-05-19 09:12:09</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>f46ad1ac4febd200b3a29efd0210c783</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>mapped_to</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_ui_policy_action_f46ad1ac4febd200b3a29efd0210c783</sys_update_name>
+        <sys_updated_by>Guneet</sys_updated_by>
+        <sys_updated_on>2016-05-19 09:12:09</sys_updated_on>
+        <table>x_jade_jconnect_adapter</table>
+        <ui_policy display_value="Make fields Read only">3c1a51ac4febd200b3a29efd0210c77a</ui_policy>
+        <visible>ignore</visible>
+    </sys_ui_policy_action>
+</record_update>

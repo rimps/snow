@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.PROCESS_SFDC_ACCOUNT_OUTBOUND</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>PROCESS_SFDC_ACCOUNT_OUTBOUND</name>
+        <script><![CDATA[var PROCESS_SFDC_ACCOUNT_OUTBOUND = Class.create();
+var companyId = '';
+PROCESS_SFDC_ACCOUNT_OUTBOUND.prototype = {
+	initialize: function() {
+		this.stagingRecord = null;
+		this.transaction_id = null;
+		this.integration_id = null;
+		this.connection_id = null;
+		this.account_id = null;
+		this.company_id = null;
+	},
+	
+	processData: function(dataDetail) {
+		gs.info('***************************************************************************');
+		gs.info("Inside ProcesData of outbound script includes...");
+		this.stagingRecord = dataDetail;
+		this.transaction_id = dataDetail.transaction;
+		this.integration_id = dataDetail.transaction.integration;
+		this.connection_id = dataDetail.transaction.integration.connection;
+		this.company_id = dataDetail.transaction.message;
+		companyId = dataDetail.transaction.message;
+		gs.info("Company Id :; "+dataDetail.transaction.message);
+		
+		//create sfdc object
+		var obj = {};
+		var map = new GlideRecord("x_jade_jconnect_integration_mapping");
+		map.addQuery("integration", this.integration_id);
+		map.query();
+		while(map.next()) {
+			var key = "" + map.target_field;
+			obj[key] = "" + this.stagingRecord["u_" + key.toLowerCase()];
+		}
+		
+		gs.info("After creating object : : "+obj);
+		//validations
+		this._updateStagingTable("Validating");
+		var validation_result = this._runValidation(obj);
+
+		if(!validation_result) {
+			this._updateStagingTable("Validation failed");
+			return;
+		}
+		
+		//transformations
+		this._updateStagingTable("Transforming");
+		var transformation_result = this._runTransformation(obj);
+
+		if(!transformation_result) {
+			this._updateStagingTable("Transformation failed");
+			return;
+		}
+
+		this._updateStagingTable("Sent to SFDC");
+
+		for(var key in obj) {
+			//Pick value from Transformation if applicable
+			var transformationsObj = new GlideRecord("x_jade_jconnect_transaction_detail_transformation_status");
+			transformationsObj.addQuery("transaction_detail", this.stagingRecord.sys_id);
+			transformationsObj.addQuery("field", key);
+			transformationsObj.query();
+			if(transformationsObj.next()) {
+				gs.info('Transforming...');
+				obj[key] = transformationsObj.result;
+			}
+		}
+		
+		//send data to sfdc
+		var connection = new GlideRecord('x_jade_jconnect_connection');
+		connection.get(this.connection_id);
+		
+		if(this._existsInCorrelation()) {
+			
+			//update account in salesforce
+			try {
+				gs.info("entry in try");
+				var r = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : SFDC UpdateAccount', 'post');
+				r.setStringParameterNoEscape('instance_url', connection.url);
+				r.setStringParameterNoEscape('access_token', connection.access_token);
+				r.setStringParameterNoEscape('account_id', this.account_id);
+				gs.info("account id ==="+this.account_id);
+				r.setStringParameterNoEscape('content', new global.JSON().encode(obj));
+				r.setStringParameterNoEscape("_HttpMethod","PATCH");
+				var response = r.execute();
+				gs.info("my response::"+response.getStatusCode());
+				var responseBody = response.getBody();
+				gs.info("content ="+new global.JSON().encode(obj));
+				gs.info("response body =="+responseBody);
+				var httpStatus = response.getStatusCode();
+				gs.info("UpdateAccount HTTP status: "+ httpStatus);
+				if(httpStatus < 300) {
+					gs.info("Salesforce account updated");
+					this._updateStagingTable("Updated");
+					this._updateActionStatus("Update Account", "");
+				}
+			}
+			catch(ex) {
+				gs.info("Caught error at UpdateAccount: "+ ex);
+			}
+		}
+		else {
+			
+			//create new account in salesforce
+			try {
+				gs.info("entry in try ");
+				var r1 = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : SFDC CreateAccount', 'post');
+				var reqBody = new global.JSON().encode(obj).toString();
+				//var reqBody = JSON.stringify(obj);
+				gs.info("neeru  request body ===="+reqBody);
+				r1.setStringParameterNoEscape('content', reqBody);
+								
+				r1.setStringParameterNoEscape('instance_url', connection.url);
+				r1.setStringParameterNoEscape('access_token', connection.access_token);
+				var response1 = r1.execute();
+				var responseBody1 = response1.getBody();
+				gs.info("RESPONSE BODY :: "+responseBody1);
+				var httpStatus1 = response1.getStatusCode();
+				gs.info("CreateAccount HTTP status::::::: "+ httpStatus1);
+				if(httpStatus1 < 300) {
+					//var parsedResponse = JSON.parse(response1);
+					var parsedResponse =new global.JSON().decode(responseBody1);
+					gs.info('parsedResponse.id:::'+parsedResponse.id);
+					this.account_id = parsedResponse.id;
+					gs.info('ppppp*******************************************************************');
+					gs.info("Salesforce account created with id: "+ this.account_id);
+					//update correlation
+					var cor_id = this._writeToCorrelation(dataDetail.transaction.message);
+					gs.info('eeeeee***********************************************************************');
+					if(!cor_id) {
+						gs.info("Update to correlation failed");
+					}
+					
+					this._updateStagingTable("Inserted");
+					this._updateActionStatus("Create Account", "");
+				}
+			}
+			catch(ex1) {
+				gs.info("Caught error at CreateAccount: "+ ex1);
+			}
+		}
+	},
+
+	//run validations
+	_runValidation: function(outboundData) {
+		gs.info("SFDC_ACCOUNT_OUTBOUND : _runValidation begin");
+		var validations = new GlideRecord("x_jade_jconnect_integration_validation");
+		validations.addQuery("integration", this.integration_id);
+		validations.addQuery("active",true);
+		validations.orderBy("sequence");
+		validations.query();
+		while(validations.next()) {
+			var validationName = validations.name;
+			if(validationName == "Mandatory" || true) {
+				if(validations.fields.toString() != "") {
+					var mandatory_fields = validations.fields.toString().split(',');
+					var mandatory_field_in = validations.fields.getDisplayValue().split(',');
+					var obj = {};
+					var id = "";
+					for(var i=0; i< mandatory_fields.length; i++){
+						var fieldName = new GlideRecord('x_jade_jconnect_integration_mapping');
+						fieldName.get(mandatory_fields[i]);
+						
+						id = "" + fieldName.target_field;
+						obj["" + id] = "" + outboundData["" + id];
+					}
+					  
+					var gse = new GlideScopedEvaluator();
+					gse.putVariable('gr', obj);
+					gse.putVariable('mandatory_fields', mandatory_field_in);
+					var result = gse.evaluateScript(validations, 'custom_script');
+					
+					var validationObj1  = new GlideRecord('x_jade_jconnect_transaction_detail_validation_status');
+					validationObj1.initialize();
+					validationObj1.validation=validations.sys_id;
+					validationObj1.transaction_detail = this.stagingRecord.sys_id;
+					
+					if(result){
+						validationObj1.status = 'pass';//Pass
+						validationObj1.insert();
+						return true;
+					} 
+					else {
+						validationObj1.status = 'fail';//Fail
+						validationObj1.error = 'Mandatory Validation Failed for field:'+id;
+						validationObj1.insert();
+						//this.updateCorrelationTable(dataDetail.id,'validation failed');
+						//this._writeToCorrelation()
+						return false;
+					}
+				}
+				else {
+					gs.info("SFDC_ACCOUNT_OUTBOUND : _runValidation - No Mandatory fields selected");
+					return true;
+				}
+			}
+		}
+	},
+
+	//run transformations
+	_runTransformation: function(outboundData) {
+		gs.info("SFDC_ACCOUNT_OUTBOUND : _runTransformation begin");
+		
+		var transformations = new GlideRecord("x_jade_jconnect_integration_transformation");
+		transformations.addQuery("integration", this.integration_id);
+		transformations.addQuery("active",true);
+		transformations.orderBy("sequence");
+		transformations.query();
+		var transFlag = true;
+		while(transformations.next()) {
+			var fieldName = transformations.field.target_field;
+			if(fieldName != "") {
+				
+				if(transformations.type == 'script'){
+					var gseTrans = new GlideScopedEvaluator();
+					gseTrans.putVariable('inputVal', outboundData["" + fieldName]);
+					try {
+						var resultTrans = gseTrans.evaluateScript(transformations, 'custom_script');
+						//gs.info('SFDC_ACCOUNT_OUTBOUND : _runTransformation of field '+fieldName +' having value '+dataDetail.getValue(fieldName)+' ,Transformation Result: ' +resultTrans);
+						
+						var transRec  = new GlideRecord('x_jade_jconnect_transaction_detail_transformation_status');
+						transRec.initialize();
+						transRec.transformation=transformations.sys_id;
+						transRec.transaction_detail = this.stagingRecord.sys_id;
+						transRec.field = fieldName;
+						
+						if(resultTrans != 'error') {
+							transRec.status = 'pass';//Pass
+							transRec.result=resultTrans;
+							transRec.insert();
+						}
+						else {
+							transRec.status = 'fail';//Fail
+							transRec.insert();
+							//this.updateCorrelationTable(dataDetail.id,'transformation failed');
+							transFlag = false;
+						}
+					}
+					catch(ex) {
+						gs.info('SFDC_ACCOUNT_OUTBOUND : _runTransformation' + ex);
+						transRec.status = 'fail';//Fail
+						transRec.insert();
+						//this.updateCorrelationTable(dataDetail.id,'transformation failed');
+						transFlag = false;
+					}
+				}
+			}
+			else {
+				gs.info('SFDC_ACCOUNT_OUTBOUND : _runTransformation fieldName has not been defined');
+				var transRec  = new GlideRecord('x_jade_jconnect_transaction_detail_transformation_status');
+				transRec.initialize();
+				transRec.transformation=transformations.sys_id;
+				transRec.transaction_detail = this.stagingRecord.sys_id;
+				transRec.error = 'FieldName not defined';
+				transRec.status = 'pass';//Pass
+				transRec.insert();
+			}
+		}
+		return transFlag;
+	},
+
+	_updateStagingTable: function(staging_status) {
+		var staging_record = new GlideRecord("u_x_jade_jconnect_sfdc_account_to_core_company_data_fields");
+		staging_record.get(this.stagingRecord.sys_id);
+		staging_record.transaction_status = staging_status;
+		staging_record.update();
+	},
+	
+	//updateActionStatus
+	_updateActionStatus: function(action_name, status) {
+		var actionIncidentStatus = new GlideRecord("x_jade_jconnect_transaction_detail_action_status");
+		actionIncidentStatus.initialize();
+		actionIncidentStatus.transaction_detail = this.stagingRecord.sys_id;
+		actionIncidentStatus.status = status;
+		
+		var int_action = new GlideRecord("x_jade_jconnect_integration_action");
+		int_action.addQuery("integration", this.integration_id);
+		int_action.addQuery("name", action_name);
+		int_action.query();
+		while(int_action.next()) {
+			actionIncidentStatus.action = int_action.sys_id;
+			actionIncidentStatus.insert();
+		}
+	},
+	
+	//update correlation
+	_writeToCorrelation: function(comId) {
+		var cortest = new GlideRecord("u_x_jade_jconnect_sfdc_account_correlation");
+		cortest.query();
+		while(cortest.next()){
+			
+			gs.info("*********"+cortest.sys_id);
+		}
+		
+		
+		var cor = new GlideRecord("u_x_jade_jconnect_sfdc_account_correlation");
+		//var jadeUtility = new global.JadeUtility();
+		//var comId = jadeUtility.trimVariable(companyId);
+		cor.addQuery('u_core_company_id',comId);
+		//cor.addQuery('u_core_company_id','01491a82dbdd22002ab0f20ebf961919');
+		gs.info("Richa Company Id Id : "+comId);
+		cor.query();
+		//cor.get("u_core_company_id", this.company_id);
+		gs.info("Inside write to correlation ... "+cor.getRowCount());
+		if(cor.next()){
+			cor.u_id = this.account_id;
+			gs.info("After setting the u_id in correlation");
+		return cor.update();
+		}
+	},
+	
+	//check correlation
+	_existsInCorrelation: function() {
+		var cor = new GlideRecord("u_x_jade_jconnect_sfdc_account_correlation");
+		cor.get("u_core_company_id", this.company_id);
+		if(cor.getValue("u_id")) {
+			this.account_id = cor.getValue("u_id");
+			return true;
+		}
+		else {
+			return false;
+		}
+	},
+	
+	type: 'PROCESS_SFDC_ACCOUNT_OUTBOUND'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>siddhartha.kadiyala</sys_created_by>
+        <sys_created_on>2016-07-15 16:58:51</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>20c7604713a06e00e7fc30a76144b098</sys_id>
+        <sys_mod_count>43</sys_mod_count>
+        <sys_name>PROCESS_SFDC_ACCOUNT_OUTBOUND</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_20c7604713a06e00e7fc30a76144b098</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-02-15 08:48:29</sys_updated_on>
+    </sys_script_include>
+</record_update>

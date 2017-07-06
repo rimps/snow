@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_documentation element="description" label="Adapter Description" language="en" table="x_jade_jconnect_adapter">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>description</element>
+            <help/>
+            <hint/>
+            <label>Adapter Description</label>
+            <language>en</language>
+            <name>x_jade_jconnect_adapter</name>
+            <plural>Adapter Descriptions</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2016-07-18 06:00:23</sys_created_on>
+            <sys_customer_update>true</sys_customer_update>
+            <sys_id>f2edad33db642e00d999f11ebf9619ff</sys_id>
+            <sys_mod_count>1</sys_mod_count>
+            <sys_name>Adapter Description</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_documentation_x_jade_jconnect_adapter_description_en</sys_update_name>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2016-07-18 06:07:38</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

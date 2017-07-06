@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="Connection Status Update" max_length="40" name="x_jade_jconnect_connection_status_update" type="collection">
+        <element label="Connection" max_length="32" name="connection" reference="x_jade_jconnect_connection" type="reference"/>
+        <element label="Email" max_length="100" name="email" type="string"/>
+        <element label="IsEnable" max_length="100" name="isenable" type="boolean"/>
+        <element choice="3" label="Day" max_length="40" name="run_dayofmonth" type="integer">
+            <choice>
+                <element label="1" sequence="1" value="1"/>
+                <element label="2" sequence="2" value="2"/>
+                <element label="3" sequence="3" value="3"/>
+                <element label="4" sequence="4" value="4"/>
+                <element label="5" sequence="5" value="5"/>
+                <element label="6" sequence="6" value="6"/>
+                <element label="7" sequence="7" value="7"/>
+                <element label="8" sequence="8" value="8"/>
+                <element label="9" sequence="9" value="9"/>
+                <element label="10" sequence="10" value="10"/>
+                <element label="11" sequence="11" value="11"/>
+                <element label="12" sequence="12" value="12"/>
+                <element label="13" sequence="13" value="13"/>
+                <element label="14" sequence="14" value="14"/>
+                <element label="15" sequence="15" value="15"/>
+                <element label="16" sequence="16" value="16"/>
+                <element label="17" sequence="17" value="17"/>
+                <element label="18" sequence="18" value="18"/>
+                <element label="19" sequence="19" value="19"/>
+                <element label="20" sequence="20" value="20"/>
+                <element label="21" sequence="21" value="21"/>
+                <element label="22" sequence="22" value="22"/>
+                <element label="23" sequence="23" value="23"/>
+                <element label="24" sequence="24" value="24"/>
+                <element label="25" sequence="25" value="25"/>
+                <element label="26" sequence="26" value="26"/>
+                <element label="27" sequence="27" value="27"/>
+                <element label="28" sequence="28" value="28"/>
+                <element label="29" sequence="29" value="29"/>
+                <element label="30" sequence="30" value="30"/>
+                <element label="31" sequence="31" value="31"/>
+            </choice>
+        </element>
+        <element choice="3" label="Day" max_length="40" name="run_dayofweek" type="integer">
+            <choice>
+                <element label="Mon" sequence="1" value="1"/>
+                <element label="Tue" sequence="2" value="2"/>
+                <element label="Wed" sequence="3" value="3"/>
+                <element label="Thu" sequence="4" value="4"/>
+                <element label="Fri" sequence="5" value="5"/>
+                <element label="Sat" sequence="6" value="6"/>
+                <element label="Sun" sequence="7" value="7"/>
+            </choice>
+        </element>
+        <element label="Repeat Interval" max_length="40" name="run_period" type="glide_duration"/>
+        <element label="Starting" max_length="40" name="run_start" type="glide_date_time"/>
+        <element choice="3" label="Run" max_length="40" name="run_type" type="string">
+            <choice>
+                <element label="Daily" sequence="0" value="daily"/>
+                <element label="Weekly" sequence="1" value="weekly"/>
+                <element label="Monthly" sequence="2" value="monthly"/>
+                <element label="Periodically" sequence="3" value="periodically"/>
+                <element label="Once" sequence="4" value="once"/>
+                <element label="On Demand" sequence="5" value="on_demand"/>
+            </choice>
+        </element>
+        <element label="Scheduled Job" max_length="32" name="scheduled_job" read_only="true" reference="sysauto_script" type="reference"/>
+        <element label="Time" max_length="40" name="time" type="glide_time"/>
+        <index name="index">
+            <element name="scheduled_job"/>
+        </index>
+        <index name="index2">
+            <element name="connection"/>
+        </index>
+    </element>
+</database>

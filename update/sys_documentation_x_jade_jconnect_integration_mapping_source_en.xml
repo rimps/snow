@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_documentation element="source" label="Source" language="en" table="x_jade_jconnect_integration_mapping">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>source</element>
+            <help/>
+            <hint/>
+            <label>Source</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_mapping</name>
+            <plural>Sources</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>shailesh</sys_created_by>
+            <sys_created_on>2016-06-22 09:35:36</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>25d5a4efdb802600d999f11ebf9619ab</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Source</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_documentation_x_jade_jconnect_integration_mapping_source_en</sys_update_name>
+            <sys_updated_by>shailesh</sys_updated_by>
+            <sys_updated_on>2016-06-22 09:35:36</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

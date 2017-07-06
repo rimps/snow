@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description>This script for covering below mentioned points from story STRY0010067 :-&#13;
+&#13;
+1. Hide source table and target table fields&#13;
+&#13;
+2. Integration Flow field should be read only&#13;
+&#13;
+3. Make Source and Target readonly.&#13;
+&#13;
+</description>
+        <field>sys_created_on</field>
+        <global>true</global>
+        <messages/>
+        <name>STRY0010067_clientscript</name>
+        <order/>
+        <script><![CDATA[function onLoad() {
+	
+	//always read only
+	g_form.setReadOnly('integration',true);
+	g_form.setReadOnly('source_table', true);
+	g_form.setReadOnly('target_table', true);
+	
+	//hide source and target field for now, not using them yet
+	g_form.setVisible('source', false);
+	g_form.setVisible('target', false);
+	
+	//based on seeded
+	if(g_form.getValue('seeded') == 'true'){
+		g_form.setReadOnly('source_field',true);
+		g_form.setReadOnly('target_field',true);
+		g_form.setReadOnly('default_value',true);
+		g_form.setReadOnly('seeded', true);
+	}
+	else {
+		g_form.setVisible('seeded', false);
+	}
+	
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>shailesh</sys_created_by>
+        <sys_created_on>2016-06-22 08:39:22</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>dec7506bdb802600d999f11ebf961912</sys_id>
+        <sys_mod_count>13</sys_mod_count>
+        <sys_name>STRY0010067_clientscript</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_client_dec7506bdb802600d999f11ebf961912</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-02-14 11:18:37</sys_updated_on>
+        <table>x_jade_jconnect_integration_mapping</table>
+        <type>onLoad</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

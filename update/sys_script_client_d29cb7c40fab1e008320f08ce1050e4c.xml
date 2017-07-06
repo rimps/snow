@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>type</field>
+        <global>true</global>
+        <messages/>
+        <name>Show Mid Server based onType</name>
+        <order/>
+        <script><![CDATA[function onChange(control, oldValue, newValue, isLoading, isTemplate) {
+	
+	if(g_form.getValue('type')=='MID Server')
+		{
+		g_form.setDisplay('mid_server',true);
+		g_form.setMandatory('mid_server',true);
+	}
+	else
+		{
+		g_form.setMandatory('mid_server',false);
+		g_form.setDisplay('mid_server',false);
+		
+	}
+	
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>richa</sys_created_by>
+        <sys_created_on>2016-05-18 07:45:11</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>d29cb7c40fab1e008320f08ce1050e4c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Show Mid Server based onType</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_client_d29cb7c40fab1e008320f08ce1050e4c</sys_update_name>
+        <sys_updated_by>richa</sys_updated_by>
+        <sys_updated_on>2016-05-18 07:45:11</sys_updated_on>
+        <table>x_jade_jconnect_connection</table>
+        <type>onChange</type>
+        <ui_type/>
+        <view/>
+    </sys_script_client>
+</record_update>

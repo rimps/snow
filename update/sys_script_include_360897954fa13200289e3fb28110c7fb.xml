@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.POPULATE_NETSUITE_ASSET_INBOUND</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>POPULATE_NETSUITE_ASSET_INBOUND</name>
+        <script><![CDATA[var POPULATE_NETSUITE_ASSET_INBOUND = Class.create();
+var jadeUtility;
+var jadeConnectLogger;
+POPULATE_NETSUITE_ASSET_INBOUND.prototype = {
+
+    initialize: function() {
+        jadeUtility = new global.JadeUtility();
+        jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+    },
+
+    process: function(object) {
+        try {
+            var checkRes = this.getResponse(object);
+            if (!checkRes) return;
+        } catch (ex) {
+            var message = ex.getMessage();
+            jadeConnectLogger.info("JadeConnect : POPULATE_NETSUITE_ASSET_INBOUND : message: " + message);
+        }
+    },
+
+    getResponse: function(object) {
+        var r = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : NetSuite Assets', 'get');
+        var response = r.execute();
+        var responseBody = response.getBody();
+        var httpStatus = response.getStatusCode();
+        jadeConnectLogger.info("JadeConnect : POPULATE_NETSUITE_ASSET_INBOUND : Total Size : " + responseBody.totalSize + '**' + httpStatus);
+        if (httpStatus != 200) {
+            var err = new GlideRecord('u_errors');
+            err.initialize();
+            err.u_error_description = "Error in connection";
+            err.u_response = "Error in connection. Check your credentials.";
+            err.u_integration = object.integration;
+            var integrationFlowDAO = new global.integrationFlowDAO();
+            integrationFlowDAO.insertRecordsInTable(err);
+            return false;
+        } else {
+            this.getData(responseBody, httpStatus, object);
+            return true;
+        }
+    },
+
+    getData: function(responseBody, httpStatus, object) {
+        if (httpStatus < 300) {
+            //create inbound transaction record
+            var trans_sys_id = this.insertRecordInTransactionTable(responseBody, object);
+            var json = new global.JSON();
+            responseBody = json.decode(responseBody);
+
+            jadeConnectLogger.info("JadeConnect : POPULATE_NETSUITE_ASSET_INBOUND : Total Size : " + responseBody.length);
+            if (responseBody.length > 0) {
+                for (var i = 0; i < responseBody.length; i++) {
+                    this.insetRecordsInStagingTable(responseBody[i]);
+                    this.updateTransactionStatus(trans_sys_id, 'parsed');
+                }
+            }
+        }
+    },
+
+    insertRecordInTransactionTable: function(responseBody, object) {
+        var grTansac = new GlideRecord("x_jade_jconnect_transaction");
+        grTansac.initialize();
+        grTansac.integration = object.integration;
+        jadeConnectLogger.info("JadeConnect : POPULATE_NETSUITE_ASSET_INBOUND : Integration " + object.integration);
+        grTansac.run_time = object.runTime;
+        jadeConnectLogger.info("JadeConnect : POPULATE_NETSUITE_ASSET_INBOUND : Time " + object.runTime);
+        grTansac.status = "new";
+        grTansac.job = object.job;
+        jadeConnectLogger.info("JadeConnect : POPULATE_NETSUITE_ASSET_INBOUND : JobName :" + object.job);
+        grTansac.message = responseBody;
+        trans_sys_id = grTansac.insert();
+        jadeConnectLogger.info("JadeConnect : POPULATE_NETSUITE_ASSET_INBOUND : Got List of new/updated ids" + trans_sys_id);
+        return trans_sys_id;
+    },
+
+    insetRecordsInStagingTable: function(responseBody1) {
+        jadeConnectLogger.info("JadeConnect : POPULATE_NETSUITE_ASSET_INBOUND : Individual Case: " + responseBody1);
+        var sdf = new GlideRecord("u_x_jade_jconnect_netsuite_asset_to_cmdb_ci_data_fields");
+        sdf.initialize();
+		gs.info(responseBody1);
+        for (var j in responseBody1) {
+			gs.info(j.toLowerCase());
+			
+			if(j.toLowerCase()=='altname')
+				{
+					sdf["u_name"] = responseBody1[j];
+				}
+			if(j.toLowerCase()=='name')
+				{
+					 sdf["u_id"] = responseBody1[j];
+					
+				}
+			else
+				{
+			sdf["u_" + j.toLowerCase()] = responseBody1[j];		 
+				}	 
+				
+        }
+        sdf.transaction = trans_sys_id;
+        sdf.transaction_status = "new";
+        sdf.insert();
+    },
+
+    updateTransactionStatus: function(trans_sys_id, traStatus) {
+        var grTansac = new GlideRecord("x_jade_jconnect_transaction");
+        grTansac.addQuery('sys_id', trans_sys_id);
+        grTansac.query();
+        if (grTansac.next()) {
+            grTansac.status = traStatus;
+        }
+        grTansac.update();
+    },
+
+    type: 'POPULATE_NETSUITE_ASSET_INBOUND'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>skadiyala</sys_created_by>
+        <sys_created_on>2017-03-16 08:40:16</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>360897954fa13200289e3fb28110c7fb</sys_id>
+        <sys_mod_count>28</sys_mod_count>
+        <sys_name>POPULATE_NETSUITE_ASSET_INBOUND</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_360897954fa13200289e3fb28110c7fb</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-04-14 05:40:19</sys_updated_on>
+    </sys_script_include>
+</record_update>

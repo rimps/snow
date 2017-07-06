@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_documentation element="transaction_detail" label="Transaction Detail" language="en" table="x_jade_jconnect_transaction_detail_validation_status">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>transaction_detail</element>
+            <help/>
+            <hint/>
+            <label>Transaction Detail</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail_validation_status</name>
+            <plural>Transaction Details</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-17 01:08:09</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>a17899bf0f171e008320f08ce1050ecb</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Transaction Detail</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_documentation_x_jade_jconnect_transaction_detail_validation_status_transaction_detail_en</sys_update_name>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-17 01:08:09</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

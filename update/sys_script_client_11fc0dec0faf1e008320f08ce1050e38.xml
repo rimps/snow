@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>direction</field>
+        <global>true</global>
+        <messages/>
+        <name>Make Adapter Visible</name>
+        <order/>
+        <script><![CDATA[function onChange(control, oldValue, newValue, isLoading, isTemplate) {
+	var dirVal=g_form.getValue('direction');
+	if(dirVal=='inbound'|| dirVal=='outbound')
+		{
+		g_form.setVisible('adapter',true);
+		g_form.setMandatory('adapter',true);
+		//Type appropriate comment here, and begin script below
+	}
+	else
+		{
+		g_form.setMandatory('adapter',false);
+		g_form.setVisible('adapter',false);
+	}
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>richa</sys_created_by>
+        <sys_created_on>2016-05-19 08:15:26</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>11fc0dec0faf1e008320f08ce1050e38</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Make Adapter Visible</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_client_11fc0dec0faf1e008320f08ce1050e38</sys_update_name>
+        <sys_updated_by>shailesh</sys_updated_by>
+        <sys_updated_on>2016-06-22 10:41:44</sys_updated_on>
+        <table>x_jade_jconnect_integration</table>
+        <type>onChange</type>
+        <ui_type/>
+        <view/>
+    </sys_script_client>
+</record_update>

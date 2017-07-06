@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.PROCESS_JIRA_OUTBOUND</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>PROCESS_JIRA_OUTBOUND</name>
+        <script><![CDATA[var PROCESS_JIRA_OUTBOUND = Class.create();
+PROCESS_JIRA_OUTBOUND.prototype = {
+	initialize: function() {
+		this.stagingRecord = null;
+		this.transaction_id = null;
+		this.integration_id = null;
+		this.connection_id = null;
+		this.issue_id = null;
+		this.incident_id = null;
+	},
+	
+	processData: function(dataDetail) {
+		this.stagingRecord = dataDetail;
+		this.transaction_id = dataDetail.transaction;
+		this.integration_id = dataDetail.transaction.integration;
+		this.connection_id = dataDetail.transaction.integration.connection;
+		this.incident_id = dataDetail.transaction.message;
+		gs.info(dataDetail);
+		//create sfdc object
+		var obj = {};
+		var map = new GlideRecord("x_jade_jconnect_integration_mapping");
+		map.addQuery("integration", this.integration_id);
+		map.query();
+		while(map.next()) {
+			var key = "" + map.target_field;
+			gs.info(this.stagingRecord["u_" + key.toLowerCase()]);
+			obj[key] = "" + this.stagingRecord["u_" + key.toLowerCase()];
+		}
+		
+		//validations
+		this._updateStagingTable("Validating");
+		var validation_result = this._runValidation(obj);
+		
+		if(!validation_result) {
+			this._updateStagingTable("Validation failed");
+			return;
+		}
+		
+		//transformations
+		this._updateStagingTable("Transforming");
+		var transformation_result = this._runTransformation(obj);
+		
+		if(!transformation_result) {
+			this._updateStagingTable("Transformation failed");
+			return;
+		}
+		
+		this._updateStagingTable("Sent to Jira");
+		
+		for(var key in obj) {
+			//Pick value from Transformation if applicable
+			var transformationsObj = new GlideRecord("x_jade_jconnect_transaction_detail_transformation_status");
+			transformationsObj.addQuery("transaction_detail", this.stagingRecord.sys_id);
+			transformationsObj.addQuery("field", key);
+			transformationsObj.query();
+			if(transformationsObj.next()) {
+				gs.info('Transforming...');
+				obj[key] = transformationsObj.result;
+			}
+		}
+		
+		//send data to sfdc
+		var connection = new GlideRecord('x_jade_jconnect_connection');
+		connection.get(this.connection_id);
+		
+		if(this._existsInCorrelation()) {
+			
+			//update account in salesforce
+			try {
+				var comment= obj.comment.toString();
+				gs.info("comments ="+comment);
+			var issueName = obj.summary.toString();
+			var descr = obj.description.toString();
+			
+			var summary = '"summary":"'+issueName+'","description":"'+descr+'"';
+			var issueType = '"name":"Task"';
+			
+			var body = '{"fields":{'+summary +',"project":{"key":"PROJ"},"issuetype":{'+issueType +'}}}';
+			gs.info("Issue Body : "+body);
+			
+				var r = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : Jira UpdateIssue', 'put');
+				r.setStringParameterNoEscape('instance_url', connection.url);
+				gs.info("connection.url== "+connection.url);
+				//r.setStringParameter('access_token', connection.access_token);
+				gs.info(this.issue_id);
+				r.setStringParameterNoEscape('issue_key', this.issue_id);
+				r.setStringParameterNoEscape('content',body);
+				gs.info(new global.JSON().encode(obj));
+				//r.setQueryParameter("_HttpMethod","PATCH");
+				var response = r.execute();
+				var responseBody = response.getBody();
+				var httpStatus = response.getStatusCode();
+				gs.info("UpdateIssue HTTP status: "+ httpStatus);
+				gs.info("response="+responseBody);
+				if(httpStatus < 300) {
+					if(comment!='')
+					{
+						gs.info("comments5375476234="+comment);
+					var body1 = {"body": comment};
+						gs.info("body1 "+body1);
+						var content=JSON.stringify(body1);
+						var cont='\''+content+'\'';
+						gs.info("con==="+content);
+					var r2 = new sn_ws.RESTMessageV2('x_jade_jconnect.Jadeconnect: Jira comments', 'post');
+					r2.setStringParameterNoEscape('body',content);
+					r2.setStringParameterNoEscape('instance_url', 'jadeglobaldemo.atlassian.net');
+						gs.info("this.issue_id="+this.issue_id);
+					r2.setStringParameter('issue_key',this.issue_id);
+					var response2 = r2.execute();
+					var responseBody2 = response2.getBody();
+						gs.info("responseBody2===="+responseBody2);
+					var httpStatus2 = response2.getStatusCode();
+						gs.info("neeru status "+httpStatus2);
+						
+					}
+					gs.info("Jira Issue updated");
+					this._updateStagingTable("Updated");
+					this._updateActionStatus("Update Issue", "");
+				}
+			}
+			catch(ex) {
+				gs.info("Caught error at UpdateIssue: "+ ex);
+			}
+		}
+		else {
+			
+			//create new account in salesforce
+			try {
+				// 				var r1 = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : Jira CreateIssue', 'post');
+				// 				gs.info("Request content body : "+new global.JSON().encode(obj));
+				
+				//var scr = new global.Create_Jira_Body();
+				//var issueBody = scr.createBody(obj);
+				var comment= obj.comment.toString();
+				gs.info("comments ="+comment);
+			var issueName = obj.summary.toString();
+			var descr = obj.description.toString();
+			
+			var summary = '"summary":"'+issueName+'","description":"'+descr+'"';
+			var issueType = '"name":"Task"';
+			
+			var body = '{"fields":{'+summary +',"project":{"key":"PROJ"},"issuetype":{'+issueType +'}}}';
+			gs.info("Issue Body : "+body);
+			
+			var r1 = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : JIRA CreateIssue', 'post');
+			r1.setStringParameterNoEscape('body',body);
+			
+			
+			//hard coding
+			r1.setStringParameterNoEscape('instance_url', 'jadeglobaldemo.atlassian.net');
+			
+			
+			var response1 = r1.execute();
+			var responseBody1 = response1.getBody();
+			gs.info("Jira Response Body : "+responseBody1);
+			var httpStatus1 = response1.getStatusCode();
+			gs.info("CreateIssue HTTP status neeru: "+ httpStatus1);
+			if(httpStatus1 < 300) {
+				var json = new global.JSON();
+				responseBody1 = json.decode(responseBody1);
+				//var parsedResponse = json.parse(responseBody1);
+				//gs.info(responseBody1.key);
+				//this.issue_id = parsedResponse.id;
+				this.issue_id = responseBody1.key;
+				
+				gs.info("Jira Issue created with id: "+ this.issue_id);
+				if(comment!='')
+					{
+						gs.info("comments5375476234="+comment);
+					var body1 = {"body": comment};
+						gs.info("body1 "+body1);
+						var content=JSON.stringify(body1);
+						var cont='\''+content+'\'';
+						gs.info("con==="+content);
+					var r2 = new sn_ws.RESTMessageV2('x_jade_jconnect.Jadeconnect: Jira comments', 'post');
+					r2.setStringParameterNoEscape('body',content);
+					r2.setStringParameterNoEscape('instance_url', 'jadeglobaldemo.atlassian.net');
+						gs.info("this.issue_id="+this.issue_id);
+					r2.setStringParameter('issue_key',this.issue_id);
+					var response2 = r2.execute();
+					var responseBody2 = response2.getBody();
+						gs.info("responseBody2===="+responseBody2);
+					var httpStatus2 = response2.getStatusCode();
+						gs.info("neeru status "+httpStatus2);
+						
+					}
+				//update correlation
+				var cor_id = this._writeToCorrelation();
+				if(!cor_id) {
+					gs.info("Update to correlation failed");
+				}
+				
+				this._updateStagingTable("Inserted");
+				this._updateActionStatus("Create Issue", "");
+			}
+				
+		
+			}
+		
+		catch(ex1) {
+			gs.info("Caught error at CreateIssue: "+ ex1);
+		}
+	}
+},
+
+//run validations
+_runValidation: function(outboundData) {
+	gs.info("JIRA_ISSUE_OUTBOUND : _runValidation begin");
+	var validations = new GlideRecord("x_jade_jconnect_integration_validation");
+	validations.addQuery("integration", this.integration_id);
+	validations.addQuery("active",true);
+	validations.orderBy("sequence");
+	validations.query();
+	while(validations.next()) {
+		var validationName = validations.name;
+		if(validationName == "Mandatory" || true) {
+			if(validations.fields.toString() != "") {
+				var mandatory_fields = validations.fields.toString().split(',');
+				var mandatory_field_in = validations.fields.getDisplayValue().split(',');
+				var obj = {};
+				var id = "";
+				for(var i=0; i< mandatory_fields.length; i++){
+					var fieldName = new GlideRecord('x_jade_jconnect_integration_mapping');
+					fieldName.get(mandatory_fields[i]);
+					
+					id = "" + fieldName.target_field;
+					obj["" + id] = "" + outboundData["" + id];
+				}
+				
+				var gse = new GlideScopedEvaluator();
+				gse.putVariable('gr', obj);
+				gse.putVariable('mandatory_fields', mandatory_field_in);
+				var result = gse.evaluateScript(validations, 'custom_script');
+				
+				var validationObj1  = new GlideRecord('x_jade_jconnect_transaction_detail_validation_status');
+				validationObj1.initialize();
+				validationObj1.validation=validations.sys_id;
+				validationObj1.transaction_detail = this.stagingRecord.sys_id;
+				
+				if(result){
+					validationObj1.status = 'pass';//Pass
+					validationObj1.insert();
+					return true;
+				}
+				else {
+					validationObj1.status = 'fail';//Fail
+					validationObj1.error = 'Mandatory Validation Failed for field:'+id;
+					validationObj1.insert();
+					//this.updateCorrelationTable(dataDetail.id,'validation failed');
+					//this._writeToCorrelation()
+					return false;
+				}
+			}
+			else {
+				gs.info("JIRA_ISSUE_OUTBOUND : _runValidation - No Mandatory fields selected");
+				return true;
+			}
+		}
+	}
+},
+
+//run transformations
+_runTransformation: function(outboundData) {
+	gs.info("SFDC_ACCOUNT_OUTBOUND : _runTransformation begin");
+	
+	var transformations = new GlideRecord("x_jade_jconnect_integration_transformation");
+	transformations.addQuery("integration", this.integration_id);
+	transformations.addQuery("active",true);
+	transformations.orderBy("sequence");
+	transformations.query();
+	var transFlag = true;
+	while(transformations.next()) {
+		var fieldName = transformations.field.target_field;
+		if(fieldName != "") {
+			
+			if(transformations.type == 'script'){
+				var gseTrans = new GlideScopedEvaluator();
+				gseTrans.putVariable('inputVal', outboundData["" + fieldName]);
+				try {
+					var resultTrans = gseTrans.evaluateScript(transformations, 'custom_script');
+					//gs.info('SFDC_ACCOUNT_OUTBOUND : _runTransformation of field '+fieldName +' having value '+dataDetail.getValue(fieldName)+' ,Transformation Result: ' +resultTrans);
+					
+					var transRec  = new GlideRecord('x_jade_jconnect_transaction_detail_transformation_status');
+					transRec.initialize();
+					transRec.transformation=transformations.sys_id;
+					transRec.transaction_detail = this.stagingRecord.sys_id;
+					transRec.field = fieldName;
+					
+					if(resultTrans != 'error') {
+						transRec.status = 'pass';//Pass
+						transRec.result=resultTrans;
+						transRec.insert();
+					}
+					else {
+						transRec.status = 'fail';//Fail
+						transRec.insert();
+						//this.updateCorrelationTable(dataDetail.id,'transformation failed');
+						transFlag = false;
+					}
+				}
+				catch(ex) {
+					gs.info('SFDC_CONTACT_OUTBOUND : _runTransformation' + ex);
+					transRec.status = 'fail';//Fail
+					transRec.insert();
+					//this.updateCorrelationTable(dataDetail.id,'transformation failed');
+					transFlag = false;
+				}
+			}
+		}
+		else {
+			gs.info('SFDC_CONTACT_OUTBOUND : _runTransformation fieldName has not been defined');
+			var transRec  = new GlideRecord('x_jade_jconnect_transaction_detail_transformation_status');
+			transRec.initialize();
+			transRec.transformation=transformations.sys_id;
+			transRec.transaction_detail = this.stagingRecord.sys_id;
+			transRec.error = 'FieldName not defined';
+			transRec.status = 'pass';//Pass
+			transRec.insert();
+		}
+	}
+	return transFlag;
+},
+
+_updateStagingTable: function(staging_status) {
+	gs.info("entry in update staging table");
+	var staging_record = new GlideRecord("u_x_jade_jconnect_jira_to_incident_data_fields");
+	staging_record.get(this.stagingRecord.sys_id);
+	staging_record.transaction_status = staging_status;
+	staging_record.update();
+},
+
+//updateActionStatus
+_updateActionStatus: function(action_name, status) {
+	var actionIncidentStatus = new GlideRecord("x_jade_jconnect_transaction_detail_action_status");
+	actionIncidentStatus.initialize();
+	actionIncidentStatus.transaction_detail = this.stagingRecord.sys_id;
+	actionIncidentStatus.status = status;
+	
+	var int_action = new GlideRecord("x_jade_jconnect_integration_action");
+	int_action.addQuery("integration", this.integration_id);
+	int_action.addQuery("name", action_name);
+	int_action.query();
+	while(int_action.next()) {
+		actionIncidentStatus.action = int_action.sys_id;
+		actionIncidentStatus.insert();
+	}
+},
+
+//update correlation
+_writeToCorrelation: function() {
+	var cor = new GlideRecord("u_x_jade_jconnect_jira_correlation");
+	cor.get("u_incident_id", this.incident_id);
+	cor.u_id = this.issue_id;
+	return cor.update();
+},
+
+//check correlation
+_existsInCorrelation: function() {
+	var cor = new GlideRecord("u_x_jade_jconnect_jira_correlation");
+	cor.get("u_incident_id", this.incident_id);
+	if(cor.getValue("u_id")) {
+		gs.info(cor.getValue("u_id"));
+		this.issue_id = cor.getValue("u_id");
+		gs.info('Exist in correlation:'+this.issue_id);
+		return true;
+	}
+	else {
+		return false;
+	}
+},
+
+type: 'PROCESS_JIRA_OUTBOUND'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>siddhartha.kadiyala</sys_created_by>
+        <sys_created_on>2016-08-03 01:54:51</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>a1ed4774138d62404f5f3b1a6144b05a</sys_id>
+        <sys_mod_count>82</sys_mod_count>
+        <sys_name>PROCESS_JIRA_OUTBOUND</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_a1ed4774138d62404f5f3b1a6144b05a</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-04-25 14:27:45</sys_updated_on>
+    </sys_script_include>
+</record_update>

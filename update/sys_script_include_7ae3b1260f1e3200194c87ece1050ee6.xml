@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.POPULATE_JIRA_TASK_OUTBOUND</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>POPULATE_JIRA_TASK_OUTBOUND</name>
+        <script><![CDATA[var POPULATE_JIRA_TASK_OUTBOUND = Class.create();
+var jadeUtility;
+var jadeConnectLogger;
+var integration_id = ''; 
+var transaction_id = "";
+var message = "";
+POPULATE_JIRA_TASK_OUTBOUND.prototype = {
+    initialize: function() {
+		jadeUtility= new global.JadeUtility();
+		jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+    },
+process: function(inputMessage, integration) {
+		
+		//save values
+		integration_id = integration;
+		message = inputMessage;
+		
+		//create new transaction record
+		transaction_id = this._writeToTransaction();
+		if(transaction_id == "") {
+			jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_TASK_OUTBOUND : Transaction record creation failed");
+		}
+		else {
+			jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_TASK_OUTBOUND : New transaction record created with sys_id: "+ transaction_id);
+		}
+		
+		//create new correlation
+		var cor_id = this._writeToCorrelation(message.sys_id);
+		if(!cor_id) { 
+			jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_TASK_OUTBOUND : Correlation record not created");
+		}
+		else {
+			jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_TASK_OUTBOUND : Correlation record created with sys_id: "+ cor_id);
+		}
+		
+		//insert data into staging table
+		var staging_id = this._writeToStagingTable(inputMessage);
+		if(!staging_id) {
+			jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_TASK_OUTBOUND : Staging record not created");
+		}
+		else {
+			jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_TASK_OUTBOUND : Staging record created with sys_id: "+ staging_id);
+		}
+				
+	},
+	
+	_writeToTransaction: function() {
+		
+		//write to transaction table
+		var transaction = new GlideRecord("x_jade_jconnect_transaction");
+		transaction.initialize();
+		transaction.integration = integration_id;
+		transaction.message = message.sys_id;
+		transaction.run_time = new GlideDateTime().getDisplayValue();
+		transaction.status = "new";
+		return transaction.insert();
+	},
+	
+	_writeToStagingTable: function(gr) {
+		
+		//write to staging table
+		var staging = new GlideRecord("u_x_jade_jconnect_jira_task_to_sc_task_data_fields");
+		staging.initialize();
+		staging.transaction = transaction_id;
+		staging.transaction_status = "new";
+		
+		var contactRecord = gr;
+		
+		var map = new GlideRecord("x_jade_jconnect_integration_mapping");
+		map.addQuery("integration", integration_id);
+		map.query();
+		while(map.next()) {
+			staging["u_" + jadeUtility.toLowerCase(map.target_field)] = contactRecord["" + map.source_field];
+		}
+		
+		return staging.insert();
+	},
+	
+	_writeToCorrelation: function(snow_id) {
+		
+		//write to correlation
+		var cor = new GlideRecord("u_x_jade_jconnect_jira_task_correlation");
+		if(!cor.get("u_sc_task_id", snow_id)) {
+			cor.initialize();
+			cor.u_sc_task_id = message.sys_id;
+			cor.u_status = "new";
+			return cor.insert();
+		} else {
+			// do nothing	
+		}
+	},
+	
+    type: 'POPULATE_JIRA_TASK_OUTBOUND'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>neeru</sys_created_by>
+        <sys_created_on>2017-04-26 05:21:58</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>7ae3b1260f1e3200194c87ece1050ee6</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>POPULATE_JIRA_TASK_OUTBOUND</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_7ae3b1260f1e3200194c87ece1050ee6</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-04-26 06:37:37</sys_updated_on>
+    </sys_script_include>
+</record_update>

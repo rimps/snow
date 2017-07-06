@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="Adapter Condition" max_length="40" name="x_jade_jconnect_adapter_condition" type="collection">
+        <element label="Adapter" max_length="32" name="adapter" reference="x_jade_jconnect_adapter" type="reference"/>
+        <element label="Condition" max_length="2000" name="condition" type="script"/>
+        <index name="index">
+            <element name="adapter"/>
+        </index>
+    </element>
+</database>

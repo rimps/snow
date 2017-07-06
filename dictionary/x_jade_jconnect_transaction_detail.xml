@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Transaction Detail" max_length="40" name="x_jade_jconnect_transaction_detail" sizeclass="5531" type="collection">
+        <element default="javascript:current.getTableName();" dynamic_default_value="b5cb83a85f220100a9ad2572f2b4773c" label="Class" max_length="80" name="sys_class_name" type="sys_class_name" use_dynamic_default="true"/>
+        <element calculation="answer = &quot;&quot;;" label="Transaction" max_length="32" name="transaction" reference="x_jade_jconnect_transaction" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="Transaction Status" max_length="40" name="transaction_status" type="choice">
+            <choice>
+                <element label="New" sequence="100" value="new"/>
+                <element label="Inserted" sequence="200" value="inserted"/>
+                <element label="Failed" sequence="300" value="failed"/>
+                <element label="Updated" sequence="400" value="updated"/>
+                <element label="Validating" sequence="500" value="validating"/>
+                <element label="Validation Failed" sequence="600" value="validation failed"/>
+                <element label="Transforming" sequence="700" value="transforming"/>
+                <element label="Transformation Failed" sequence="800" value="transformation failed"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="transaction"/>
+        </index>
+    </element>
+</database>

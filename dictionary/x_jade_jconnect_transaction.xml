@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Transaction" max_length="40" name="x_jade_jconnect_transaction" sizeclass="7248" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Incident" max_length="32" name="incident" reference="incident" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" label="Integration" max_length="32" name="integration" reference="x_jade_jconnect_integration" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" label="Job" max_length="32" name="job" reference="sysauto_script" type="reference"/>
+        <element label="Message" max_length="4000" name="message" type="string"/>
+        <element calculation="answer = &quot;&quot;;" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Run Time" max_length="40" name="run_time" type="glide_date_time"/>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element label="New" sequence="100" value="new"/>
+                <element label="Parsed" sequence="200" value="parsed"/>
+                <element label="Failed" sequence="300" value="failed"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="integration"/>
+        </index>
+        <index name="index2">
+            <element name="job"/>
+        </index>
+        <index name="index3">
+            <element name="incident"/>
+        </index>
+    </element>
+</database>

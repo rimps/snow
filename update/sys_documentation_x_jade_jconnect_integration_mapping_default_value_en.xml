@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_documentation element="default_value" label="Default value" language="en" table="x_jade_jconnect_integration_mapping">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>default_value</element>
+            <help/>
+            <hint/>
+            <label>Default value</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_mapping</name>
+            <plural>Default values</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 04:49:48</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>347156540ff752008320f08ce1050e47</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Default value</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_documentation_x_jade_jconnect_integration_mapping_default_value_en</sys_update_name>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 04:49:48</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

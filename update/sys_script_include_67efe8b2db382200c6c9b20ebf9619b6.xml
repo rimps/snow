@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.CreateScheduledJobService</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>CreateScheduledJobService</name>
+        <script><![CDATA[var CreateScheduledJobService = Class.create();
+var scheduledJobDao;
+var jadeUtility;
+var jadeConnectLogger;
+CreateScheduledJobService.prototype = {
+	/*
+ 	* @initialize :
+ 	* Input :  None.
+ 	* Output : None
+ 	* Description : It is the base function to initialise all global level variables.
+ 	*/
+	initialize: function() {
+		jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+		scheduledJobDao = new global.CreateScheduledJobDAO();
+		jadeUtility = new global.JadeUtility();
+	},
+	/*
+ 	* @updateScheduledJob :
+ 	* Input :  current object passed from businessrule.
+ 	* Output : None
+ 	* Description : If time of current scheduledjob had been changed, it will called and it call the respective DAO
+	 *				method to update scheduledjob time.
+ 	*/
+	updateScheduledJob: function(inputObject){
+		jadeConnectLogger.info("JadeConnect : CreateScheduledJobService : Entry in updateScheduledJob");
+		var scheduleObj = new GlideRecord('sysauto_script');
+		scheduleObj.get(inputObject.scheduled_job);
+		scheduleObj.run_type = inputObject.run;
+		scheduleObj = this.setUpdatedVariable(inputObject,scheduleObj);
+		scheduleObj.active = inputObject.active;
+		
+		var integration = inputObject.integration;
+		//var con = 'jql='+inputObject.condition;
+		var con = inputObject.query_condition;
+		jadeConnectLogger.info("JadeConnect : CreateScheduledJobService :Username in the connection : "+inputObject.integration.connection.username);
+		var conUserName = inputObject.integration.connection.username;
+		jadeUtility.setDisplayValue(scheduleObj,'run_as',conUserName);
+		//scheduleObj.run_as = conUserName;
+		var gdt = new GlideDateTime();
+		var time1 = gdt;
+		var conditions = this.getAdapterCondition(inputObject.integration.adapter.name);
+		var adpName = inputObject.integration.adapter.name;
+		if(jadeUtility.indexOf(adpName," ") != -1)
+			adpName = adpName.toString().split(' ').join('_');
+		var adpNameUpperCase = new global.JadeUtility().toUpperCase(adpName);
+		var query = 'var obj ={};obj.integration='+"'"+integration+"'"+';obj.condition="'+conditions +'";obj.filterCondition="'+ con +'";obj.runTime= new GlideDateTime(); obj.job=current.sys_id; var processData = new x_jade_jconnect.POPULATE_'+adpNameUpperCase+'(); processData.process(obj);';
+		scheduleObj.script = query;
+	//	scheduleObj.update();
+ 		var integrationFlowDAO = new global.integrationFlowDAO();
+			integrationFlowDAO.updateRecordsInTable(scheduleObj);
+		//scheduledJobDao.updateScheduledJob(scheduleObj);
+	},
+	/*
+ 	* @createScheduledJob :
+ 	* Input :  current object passed from businessrule.
+ 	* Output : SysId of the created scheduledjob.
+ 	* Description : It will create the scheculedjob while new scheduledpull has been created.
+	 */
+	createScheduledJob: function(inputObject){
+		jadeConnectLogger.info("JadeConnect : CreateScheduledJobService : Entry in createScheduledJob");
+		var scheduleObj = new GlideRecord('sysauto_script');
+		var d = new Date();
+		scheduleObj.newRecord();
+		var jobName = 'Jade_Connect_Job_'+d.getTime();
+		scheduleObj.name = jobName;
+		scheduleObj.run_type = inputObject.run;
+		scheduleObj = this.setUpdatedVariable(inputObject,scheduleObj);
+		scheduleObj.active = inputObject.active;
+		var integration = inputObject.integration;
+		//var con = 'jql='+inputObject.condition;
+		var con =inputObject.query_condition;
+		jadeConnectLogger.info("con=="+con);
+	//	jadeConnectLogger.info("JadeConnect : CreateScheduledJobService :Username in the connection : "+inputObject.integration.connection.username);
+		var conUserName = inputObject.integration.connection.username;
+		jadeUtility.setDisplayValue(scheduleObj,'run_as',conUserName);
+		//scheduleObj.run_as = conUserName;
+		var gdt = new GlideDateTime();
+		var time1 = gdt;
+		var conditions = this.getAdapterCondition(inputObject.integration.adapter.name);
+		var adpName = inputObject.integration.adapter.name;
+		if(jadeUtility.indexOf(adpName," ") != -1)
+			adpName = adpName.toString().split(' ').join('_');
+		var adpNameUpperCase = new global.JadeUtility().toUpperCase(adpName);
+		var query = 'var obj ={};obj.integration='+"'"+integration+"'"+';obj.condition="'+conditions +'";obj.filterCondition="'+ con +'";obj.runTime= new GlideDateTime(); obj.job=current.sys_id; var processData = new x_jade_jconnect.POPULATE_'+adpNameUpperCase+'(); processData.process(obj);';
+		scheduleObj.script = query;
+		
+		var sysId = scheduledJobDao.createScheduledJob(scheduleObj);
+		jadeConnectLogger.info("JadeConnect : CreateScheduledJobService : Return sysId of newly created scheduled job : "+sysId);
+		return sysId;
+	},
+	/*
+ 	* @getAdapterCondition :
+ 	* Input :  adapter name.
+ 	* Output : adapter condition if present else return "".
+ 	* Description : This method query the adptertable and return the condition.
+	 */
+	getAdapterCondition: function(adapterName){
+		jadeConnectLogger.info("JadeConnect : CreateScheduledJobService : Entry inside getAdapterCondition ");
+		var adp_conditions = new GlideRecord('x_jade_jconnect_adapter_condition');
+		adp_conditions.addQuery('adapter',adapterName);
+		adp_conditions.query();
+		if(adp_conditions.next()) {
+			return adp_conditions.condition;
+		}else{
+			return "";
+		}
+	},
+	/*
+ 	* @setUpdatedVariable :
+ 	* Input :  scheduled job object to set variable and object to get time
+ 	* Output : scheduledjob object with updated values.
+ 	* Description : This method will set time values according to the condition.
+	 */
+	setUpdatedVariable: function(inputObject,scheduleObj){
+		jadeConnectLogger.info("JadeConnect : CreateScheduledJobService : Entry inside setUpdatedVariable ");
+		if(inputObject.run == 'daily'){
+			scheduleObj.run_time=inputObject.time;
+		}else if(inputObject.run == 'weekly'){
+			scheduleObj.run_dayofweek = inputObject.run_dayofweek;
+			scheduleObj.run_time = inputObject.time;
+		}else if(inputObject.run == 'monthly'){
+			scheduleObj.run_dayofmonth = inputObject.run_dayofmonth;
+			scheduleObj.run_time = inputObject.time;
+		}else if(inputObject.run == 'periodically'){
+			scheduleObj.run_period = inputObject.run_period
+			scheduleObj.run_start = inputObject.run_start;
+		}else if(inputObject.run == 'once'){
+			scheduleObj.run_start = inputObject.run_start;
+		}
+		jadeConnectLogger.info("JadeConnect : CreateScheduledJobService : Successfully set the variable ");
+		return scheduleObj;
+		
+	},
+	
+	type: 'CreateScheduledJobService'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>chandra</sys_created_by>
+        <sys_created_on>2016-07-27 09:19:58</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>67efe8b2db382200c6c9b20ebf9619b6</sys_id>
+        <sys_mod_count>49</sys_mod_count>
+        <sys_name>CreateScheduledJobService</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_67efe8b2db382200c6c9b20ebf9619b6</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-04-17 02:26:40</sys_updated_on>
+    </sys_script_include>
+</record_update>

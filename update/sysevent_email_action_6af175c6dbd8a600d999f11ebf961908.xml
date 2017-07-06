@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sysevent_email_action">
+    <sysevent_email_action action="INSERT_OR_UPDATE">
+        <action_insert>false</action_insert>
+        <action_update>false</action_update>
+        <active>true</active>
+        <advanced_condition/>
+        <affected_field_on_event/>
+        <collection>x_jade_jconnect_connection_status_update</collection>
+        <condition/>
+        <content_type>multipart/mixed</content_type>
+        <description>This Notification will be fired when the connection is marked as isEnable for "Connection Status Tracking" and the Status of the connection is not "Authenticated."</description>
+        <event_name>x_jade_jconnect.Connection.Status</event_name>
+        <event_parm_1>false</event_parm_1>
+        <event_parm_2>false</event_parm_2>
+        <exclude_delegates>false</exclude_delegates>
+        <force_delivery>false</force_delivery>
+        <from/>
+        <generation_type>event</generation_type>
+        <importance/>
+        <include_attachments>false</include_attachments>
+        <item>event.parm1</item>
+        <item_table/>
+        <mandatory>false</mandatory>
+        <message/>
+        <message_html><![CDATA[<p>Hi,</p>
+<p>The &nbsp;Connection: ${connection}&nbsp;to the application: ${connection.application} is now having connection status: ${connection.status}.</p>
+<p>Please check the connection.</p>
+<p>Connection Details :&nbsp;</p>
+<p>Connection URL: ${connection.url}<br />Connection Type: ${connection.type}</p>
+<p>Connection Password: ${connection.password}</p>
+<p>Connection Name: ${connection.name}<br />Connection Security Token: ${connection.security_token}<br /><br />Connection Consumer Secret: ${connection.consumer_secret}<br />Connection Consumer Key: ${connection.consumer_key}<br />Connection Authentication: ${connection.authentication}</p>
+<p>&nbsp;</p>
+<p>Thanks,</p>
+<p>Jade Connect Team</p>]]></message_html>
+        <message_list/>
+        <message_text/>
+        <name>Connection Status Update</name>
+        <omit_watermark>false</omit_watermark>
+        <order>100</order>
+        <push_message_only>false</push_message_only>
+        <recipient_fields/>
+        <recipient_groups/>
+        <recipient_users>b6349bcbdb4ce200d999f11ebf961912,9131cc27db802600d999f11ebf96198f</recipient_users>
+        <reply_to/>
+        <send_self>true</send_self>
+        <sms_alternate/>
+        <style/>
+        <subject>Please check the connection</subject>
+        <subscribable>false</subscribable>
+        <sys_class_name>sysevent_email_action</sys_class_name>
+        <sys_created_by>chandra</sys_created_by>
+        <sys_created_on>2016-06-30 09:35:46</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>6af175c6dbd8a600d999f11ebf961908</sys_id>
+        <sys_mod_count>11</sys_mod_count>
+        <sys_name>Connection Status Update</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sysevent_email_action_6af175c6dbd8a600d999f11ebf961908</sys_update_name>
+        <sys_updated_by>chandra</sys_updated_by>
+        <sys_updated_on>2016-07-05 04:21:47</sys_updated_on>
+        <sys_version>2</sys_version>
+        <template/>
+        <type>email</type>
+        <weight>0</weight>
+    </sysevent_email_action>
+</record_update>

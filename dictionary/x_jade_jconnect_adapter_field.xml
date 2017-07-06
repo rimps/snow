@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Adapter Field" max_length="40" name="x_jade_jconnect_adapter_field" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Active" max_length="40" name="active" type="boolean"/>
+        <element calculation="answer = &quot;&quot;;" label="Adapter" max_length="32" name="adapter" reference="x_jade_jconnect_adapter" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" label="Default Value" max_length="40" name="default_value" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Source Field" max_length="40" name="source_field" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Source Field Id" max_length="40" name="source_field_id" type="string"/>
+        <element calculation="answer = &quot;&quot;;" display="true" label="Target Field" max_length="40" name="target_field" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Target Field Id" max_length="40" name="target_field_id" type="string"/>
+        <index name="index">
+            <element name="adapter"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Adapter Validation" max_length="40" name="x_jade_jconnect_adapter_validation" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Adapter" max_length="32" name="adapter" reference="x_jade_jconnect_adapter" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" label="Description" max_length="256" name="description" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Name" max_length="40" name="name" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Script" max_length="100000" name="script" type="script"/>
+        <element label="Sequence" max_length="40" name="sequence" type="integer"/>
+        <element label="Use Custom Script" max_length="40" name="use_custom_script" type="boolean"/>
+        <index name="index">
+            <element name="adapter"/>
+        </index>
+    </element>
+</database>

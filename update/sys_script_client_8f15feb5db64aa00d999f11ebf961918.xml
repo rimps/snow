@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>sys_created_on</field>
+        <global>true</global>
+        <messages/>
+        <name>show/hide related lists</name>
+        <order/>
+        <script><![CDATA[/*Use of this script to hide the related list returned from the script include {hide_related_list}
+* calls the function {app_name}
+*/
+function onLoad() {
+	g_form.hideRelatedLists();
+	g_form.showRelatedList('x_jade_jconnect_transaction_detail');
+	var ga = new GlideAjax('x_jade_jconnect.hide_related_list');
+	ga.addParam('sysparm_name','appName');
+	ga.addParam('sysparm_integration',g_form.getValue('integration'));
+	ga.getXML(HelloWorldParse);
+}	
+	function HelloWorldParse(response) {
+		var answer = response.responseXML.documentElement.getAttribute("answer");
+		g_form.showRelatedList(answer);
+	}
+]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>neeru</sys_created_by>
+        <sys_created_on>2016-07-12 06:04:05</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>8f15feb5db64aa00d999f11ebf961918</sys_id>
+        <sys_mod_count>44</sys_mod_count>
+        <sys_name>show/hide related lists</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_client_8f15feb5db64aa00d999f11ebf961918</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-04-10 06:33:53</sys_updated_on>
+        <table>x_jade_jconnect_transaction</table>
+        <type>onLoad</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

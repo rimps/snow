@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_documentation element="use_custom_script" label="Use Custom Script" language="en" table="x_jade_jconnect_integration_validation">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>use_custom_script</element>
+            <help/>
+            <hint/>
+            <label>Use Custom Script</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_validation</name>
+            <plural>Use Custom Scripts</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2016-06-20 07:33:42</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>e8c6f1f6db08e200d999f11ebf9619a2</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Use Custom Script</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_documentation_x_jade_jconnect_integration_validation_use_custom_script_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2016-06-20 07:33:42</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_rest_message_fn_parameters">
+    <sys_rest_message_fn_parameters action="INSERT_OR_UPDATE">
+        <name>instance_url</name>
+        <rest_message_function display_value="post">924f894b134ca6004f5f3b1a6144b0e8</rest_message_function>
+        <sys_class_name>sys_rest_message_fn_parameters</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-02-15 09:23:12</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>655d4e400fc972002a940cbce1050ed4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>instance_url</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_rest_message_fn_parameters_655d4e400fc972002a940cbce1050ed4</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-02-15 09:23:12</sys_updated_on>
+        <type>string</type>
+        <value>na16.salesforce.com</value>
+    </sys_rest_message_fn_parameters>
+</record_update>

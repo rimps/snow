@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.integrationFlowOutboundService</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>integrationFlowOutboundService</name>
+        <script><![CDATA[var integrationFlowOutboundService = Class.create();
+var jadeUtility;
+var jadeConnectLogger;
+integrationFlowOutboundService.prototype = {
+	initialize: function() {
+		jadeUtility= new global.JadeUtility();
+		jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+	},
+	/*
+ 	* @ service :
+ 	* Input : tablename,adapterName and mappedTo table name.
+ 	* Output : None.
+ 	* Description : Service is the main function in this service scriptinclude. It will internally call all other methods
+ 	*				according to the condition.
+ 	*/
+	service: function(table_name,adapterName,mappedTo,connectionName){
+		jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in service() ");
+		var adapterNameCopy = '';
+		var tableFlag=this.checkTableExistence(table_name);
+		/*
+ 		* If part will be executed only when the intermediate table already exist.
+ 		* Else part will be executed when there is no intermediate table and integration is freshly created.
+ 		*/
+		if(tableFlag){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in Service If part ");
+			this.createModuleIfNotPresent(table_name,adapterName);
+			this.createStagingBusinessRuleIfNotPresent(table_name,adapterName,mappedTo,connectionName);
+			this.createMappedToBusinessRuleIfNotPresent(mappedTo,adapterName,connectionName);
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Exit from Service If part ");
+		}
+		else{
+			
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry In Service Else part ");
+			
+			this.createStagingTable(table_name,adapterName);
+			
+			this.deleteReadRecordACLRole(table_name);
+			
+			this.createFieldsInStagingTable(table_name,adapterName,mappedTo);
+			
+			//this.createDeleteBusinessRule(table_name.toLowerCase(),adapterName,applicationName.toUpperCase());
+			
+			if(jadeUtility.indexOf(adapterName," ") != -1)
+				adapterNameCopy = adapterName.toString().split(' ').join('_');
+			this.createMappedToBusinessRule(mappedTo,jadeUtility.toUpperCase(adapterNameCopy),connectionName);
+			this.createBusinessRule(jadeUtility.toLowerCase(table_name),jadeUtility.toUpperCase(adapterNameCopy),connectionName);
+			var lastIndex = jadeUtility.lastIndexOf(adapterName,' ');
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Last index of : "+lastIndex+" : Adapter name : "+adapterName);
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Last part  Adapter : "+jadeUtility.subStr(adapterName,0,lastIndex));
+			this.createTransactionModule(jadeUtility.toLowerCase(table_name),jadeUtility.subStr(adapterName,0,lastIndex),adapterName);
+			
+			this.createCorrelationTable(mappedTo,adapterName);
+			
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Exit from Service Else part ");
+		}},
+		
+		/*
+ 		* @deleteReadRecordACLRole :
+ 		* Input : tablename
+ 		* Output : None.
+ 		* Description : This method will delete all acl roles from sys_security_acl table, which are associated with the current tablename.
+ 		* 				It will interenally called DAO layer to perform DB operations.
+ 		*/
+		deleteReadRecordACLRole: function(table_name){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in deleteReadRecordACLRole");
+			var acl = new GlideRecord('sys_security_acl');
+			acl.addQuery('operation','read');
+			acl.addQuery('name',jadeUtility.toLowerCase(table_name));
+			acl.query();
+			if(acl.next()){
+				
+				var  role= new GlideRecord('sys_security_acl_role');
+				role.addQuery('sys_security_acl',acl.sys_id);
+				role.query();
+				if(role.next())
+					var integrationFlowDAO = new global.integrationFlowDAO();
+				integrationFlowDAO.deleteReadRecordACLRole(role);
+			}
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Exit from deleteReadRecordACLRole");
+		},
+		
+		/*
+ 		* @formTableName :
+ 		* Input : adapterName,MappedTo tablename.
+ 		* Output : Dyanamicaaly created intermediate table.
+ 		* Description : In this method the adpatername and mappedTo table name process together to get the final intermediate tablename
+ 		*/
+		formTableName: function(adapterName,mappedTo) {
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in formTableName");	
+			var adapterNameWithoutDirection = jadeUtility.subStr(adapterName,0, jadeUtility.lastIndexOf(adapterName," "));
+			if(jadeUtility.indexOf(adapterNameWithoutDirection," ") != -1)
+				adapterNameWithoutDirection = adapterNameWithoutDirection.toString().split(' ').join('_');
+			
+			
+			var tableNameDemo =jadeUtility.trimVariable(adapterNameWithoutDirection)+"_to_"+jadeUtility.trimVariable(mappedTo);
+			
+			var finaltableName = 'u_x_jade_jconnect_'+tableNameDemo+'_data_fields';
+			
+			var table_name = jadeUtility.toLowerCase(finaltableName);//finaltableName.toLowerCase();
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Exit from formTableName with tableName : "+table_name);
+			return table_name;
+			
+		},
+		
+		/*
+ 		* @checkTableExistence :
+ 		* Input : intermediate tablename.
+ 		* Output : True/False.
+ 		* Description : It will check wheather the passed tablename already exists in sys_db_object table or not.
+ 		* If present returns True, else False.
+ 		*/
+		checkTableExistence : function(table_name){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in checktableExistence");
+			var dup = new GlideRecord('sys_db_object');
+			dup.addQuery('name', table_name);
+			dup.query();
+			if (dup.hasNext()) {
+				gs.info(gs.getMessage('** Table name {0} is already in use', table_name));
+				return true;
+			}else{
+				return false;
+			}
+		},
+		
+		/*
+ 		* @createModuleIfNotPresent :
+ 		* Input :  tablename and adapterName.
+ 		* Output : None
+ 		* Description : It will create modules of the respective type (Inbound or Outbound). Firstly it will check for it
+ 		* If present do nothing else create those modules.
+ 		*/
+		createModuleIfNotPresent: function(table_name,adapterName){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Call for CreateBusiness rule in Intermediate table");
+			var gr = new GlideRecord('sys_app_module');
+			gr.addQuery('name',table_name);
+			var ord =gr.addQuery('order','IN','418,419,420,421,422,423,424,425');
+			ord.addOrCondition('order','IN','434,435,436,437,438,439,440,441');
+			ord.addOrCondition('order','IN','450,451,452,453,454,455,456,457');
+			ord.addOrCondition('order','IN','466,467,468,469,470,471,472,473');
+			ord.addOrCondition('order','IN','482,483,484,485,486,487,488,489');
+			ord.addOrCondition('order','IN','498,499,500,501,502,503,504,505');
+			ord.addOrCondition('order','IN','514,515,516,517,518,519,520,521');
+			ord.addOrCondition('order','IN','530,531,532,533,534,535,536,537');
+			ord.addOrCondition('order','IN','546,547,548,549,550,551,552,553');
+			ord.addOrCondition('order','IN','562,563,564,565,566,567,568,569');
+			gr.query();
+			if(gr.getRowCount() >1){
+				jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Modules already exist!!!");
+			}else{
+				jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Call createTransactionModule");
+				this.createTransactionModule(jadeUtility.toLowerCase(table_name),jadeUtility.subStr(adapterName,0, jadeUtility.lastIndexOf(adapterName," ")),adapterName);
+			}
+			
+		},
+		
+		/*
+ 		* @createStagingBusinessRuleIfNotPresent :
+ 		* Input :  tablename,adapterName and mappedTo table name.
+ 		* Output : None
+ 		* Description : It will create businessrule on the intermediate table of the respective type (Inbound or Outbound). Firstly it will check for it
+ 		* If present do nothing else create those Businessrule.
+ 		*/
+		createStagingBusinessRuleIfNotPresent: function(table_name,adapterName,mappedTo,connectionName){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in createBusinessruleIfNotPresent");
+			var busRule = new GlideRecord('sys_script');
+			busRule.addQuery('collection',table_name);
+			var adapterUpper = jadeUtility.toUpperCase(adapterName);
+			adapterUpper = adapterUpper.toString().split(' ').join('_');
+			gs.info('Adapter Name in condition : '+adapterUpper);
+			var brName= 'PROCESS_'+adapterUpper;
+			busRule.addQuery('name',brName);
+			busRule.query();
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : getRowCount"+busRule.getRowCount());
+			if(busRule.getRowCount() >= 1){
+				jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Businessrule already exust");
+			}else{
+				jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : No Businessrule found, So call the createBusinessRule");
+				this.createBusinessRule(table_name,adapterUpper,connectionName);
+			}
+		},
+		
+		/*
+ 		* @createMappedToBusinessRuleIfNotPresent :
+ 		* Input :  mappedTo table name and adapterName .
+ 		* Output : None
+ 		* Description : It will create businessrule on the mappedTo table incase of outbound. Firstly it will check for it
+ 		* If present do nothing else create the Businessrule.
+ 		*/
+		createMappedToBusinessRuleIfNotPresent: function(mappedTo,adapterName,connectionName){
+			
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in CreateMappedToBusinessRuleIfNotPresent");
+			if(jadeUtility.indexOf(adapterName," ") != -1)
+				adapterName = adapterName.toString().split(' ').join('_');
+			
+			var busRule = new GlideRecord('sys_script');
+			busRule.addQuery('collection',mappedTo);
+			busRule.addQuery('name','CONTAINS','POPULATE_JIRA');
+			busRule.addQuery('name','CONTAINS','POPULATE_SFDC');
+			busRule.query();
+			if(busRule.getRowCount() >= 1){
+				jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Businessrule on MappedTo already Present!!");
+			}else{
+				jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : No Businessrule on MappedTo table, So call createMappedToBusinessRule");
+				this.createMappedToBusinessRule(mappedTo,jadeUtility.toUpperCase(adapterName),connectionName);
+			}
+		},
+		
+		/*
+ 		* @createStagingTable :
+ 		* Input :   adapterName and table name .
+ 		* Output : None
+ 		* Description : It will create intermediate table while creating one fresh integration.
+ 		* The intermediate table will extends Transaction Detail table in the Global scope.
+ 		*/
+		createStagingTable: function(table_name,adapterName){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in createStagingTable() ");
+			var lastIndex = jadeUtility.lastIndexOf(adapterName," ");
+			var adapterNameWithoutDirection = jadeUtility.subStr(adapterName,0,lastIndex);
+			
+			if(jadeUtility.indexOf(adapterNameWithoutDirection," ") != -1)
+				adapterNameWithoutDirection = adapterNameWithoutDirection.toString().split(' ').join('_');
+			
+			//Dynamic table creation start
+			var tabrec=new GlideRecord('sys_db_object');
+			tabrec.newRecord();
+			
+			tabrec.name = jadeUtility.toLowerCase(table_name);
+			tabrec.create_access = 'true';
+			tabrec.read_access='true';
+			tabrec.update_access='true';
+			jadeUtility.setDisplayValue(tabrec,'access','public');
+			jadeUtility.setDisplayValue(tabrec,'sys_scope','Global');
+			jadeUtility.setDisplayValue(tabrec,'super_class','Transaction Detail');
+			var trimadapterNameWithoutDirection = jadeUtility.trimVariable(adapterNameWithoutDirection);
+			tabrec.label = jadeUtility.toUpperCase(trimadapterNameWithoutDirection);
+			//create ACL
+			tabrec.create_access_controls = true;
+			jadeUtility.setDisplayValue(tabrec,'user_role','x_jade_jconnect.jade_admin');
+			var integrationFlowDAO = new global.integrationFlowDAO();
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Before entry in DAO.");
+			integrationFlowDAO.insertRecordsInTable(tabrec);
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Exit from creatingStagingTable");
+		},
+		
+		/*
+ 		* @createFieldsInStagingTable :
+ 		* Input :   adapterName,table name and mappedTo table name .
+ 		* Output : None
+ 		* Description : It will call create field method internally and get all the list of fields from another script include.
+ 		*/
+		createFieldsInStagingTable: function(table_name,adapterName,mappedTo){
+			
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in createFieldsInStagingTable");
+			var scriptName = jadeUtility.toLowerCase(adapterName)+"_fieldPopup";
+			if(jadeUtility.indexOf(scriptName," ") != -1)
+				scriptName = scriptName.toString().split(' ').join('_');
+			
+			var gr = new global.GetWrapperForName();
+			var wrapperType = gr.getWrapperType(scriptName);
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Getting WrapperType : "+wrapperType);
+			var obj = new wrapperType();
+			var response = obj.getSourceFields();
+			
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Response from Outer application : "+response);
+			
+			this.createSourceFields(response,table_name,mappedTo);
+			
+		},
+		/*
+ 		* @createSourceFields :
+ 		* Input :   list of name~value pairs, table-name and mappedTo table name.
+ 		* Output : None
+ 		* Description : It will ccreate fields in the intermediate table by calling the respective DAO method.
+ 		*/
+		createSourceFields: function(response,table_name,mapped){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in createSourceFields ");
+			var fields = response.toString().split(",");
+			for(var i=0; i<fields.length; i++) {
+				var item = fields[i].toString().split("~");
+				var tabcol=new GlideRecord('sys_dictionary');
+				tabcol.newRecord();
+				jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : ITEM Value : "+item[0] + item[1]);
+				jadeUtility.setDisplayValue(tabcol,"internal_type",'String');
+				tabcol.name= table_name.toLowerCase();
+				tabcol.column_label=item[0];
+				tabcol.element=item[1];
+				tabcol.max_length='250';
+				var integrationFlowDAO = new global.integrationFlowDAO();
+				integrationFlowDAO.insertRecordsInTable(tabcol);
+				jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Successfully create all fields in Staging Table");
+			}
+			var tabcol1=new GlideRecord('sys_dictionary');
+			tabcol1.newRecord();
+			jadeUtility.setDisplayValue(tabcol1,"internal_type",'Reference');
+			tabcol1.name=jadeUtility.toLowerCase(table_name);
+			tabcol1.column_label= mapped;
+			tabcol1.element=mapped;
+			tabcol1.max_length='250';
+			tabcol1.reference = mapped;
+			integrationFlowDAO.insertRecordsInTable(tabcol1);
+			
+			
+		},
+		/*
+ 		* @createBusinessRule :
+ 		* Input :   table name and adpater name.
+ 		* Output : None
+ 		* Description : It will create businessrule in the intermediate table by calling the respective DAO method in global scope.
+ 		*/
+		createBusinessRule: function(table_name,adapterName,connectionName){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in createBusinessRule ");
+			var conUserName = connectionName;
+			var busRule = new GlideRecord('sys_script');
+			busRule.initialize();
+			busRule.collection=table_name;
+			busRule.name="PROCESS_"+adapterName;
+			busRule.action_insert=true;
+			busRule.active=true;
+			busRule.advanced=true;
+			busRule.when='after';
+			jadeUtility.setDisplayValue(busRule,'sys_scope','Global');
+			busRule.condition='current.transaction.integration.direction=="outbound"';
+			busRule.script='(function executeRule(current, previous) {var conUsername = "'+conUserName+'"; if(current.sys_updated_by != conUsername){var gr = new x_jade_jconnect.PROCESS_'+adapterName+'();gr.processData(current);} })(current, previous);';
+			var integrationFlowDAO = new global.integrationFlowDAO();
+			integrationFlowDAO.insertRecordsInTable(busRule);
+		},
+		
+		/*
+ 		* @createMappedToBusinessRule :
+ 		* Input :   table name and adpater name.
+ 		* Output : None
+ 		* Description : It will create businessrule in the mappedTo table by calling the respective DAO method in global scope.
+ 		* Name of Businessrule will be : "POPULATE_"+ADAPTERNAME(Upper case)
+ 		*/
+		createMappedToBusinessRule: function(table_name,adapterName,connectionName){
+			jadeConnectLogger.info("JadeConnect : integrationFlowoutboundService : Entry in createMappedToBusinessRule");
+			var connUserName = connectionName;
+			var busRule = new GlideRecord('sys_script');
+			busRule.initialize();
+			busRule.collection=table_name;
+			busRule.name="POPULATE_"+adapterName;
+			busRule.action_insert=true;
+			busRule.action_update=true;
+			busRule.active=true;
+			busRule.advanced=true;
+			busRule.when='after';
+			jadeUtility.setDisplayValue(busRule,'sys_scope','Global');
+			busRule.script='(function executeRule(current, previous /*null when async*/) {if(current.sys_class_name=="'+table_name+'"){var connUsername = "'+connUserName+'";if(current.sys_updated_by != connUsername){var gr = new x_jade_jconnect.POPULATE_'+adapterName+'();gr.process(current, "'+current.sys_id+'");}}})(current, previous);';
+			var integrationFlowDAO = new global.integrationFlowDAO();
+			integrationFlowDAO.insertRecordsInTable(busRule);
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Exit from createMappedToBusinessRule ");
+		},
+		createTransactionModule: function(table_name1,beforeSpace,adapterName){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in createTransactionModule() ");
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Before space Entry value :  "+beforeSpace);
+			if(adapterName == 'SFDC ACCOUNT OUTBOUND'){
+                          orderM=418;
+                        }
+                        if(adapterName == 'SFDC CONTACT OUTBOUND'){
+                          orderM=434;
+                        }
+						 if(adapterName == 'SFDC CASE OUTBOUND'){
+                          orderM=450;
+                        }
+			             if(adapterName == 'JIRA OUTBOUND'){
+                          orderM=466;
+                        }
+			if(adapterName == 'SFDC CUSTOMER CONTACT OUTBOUND')
+				{
+					orderM=482;
+				}
+			if(adapterName == 'SFDC CUSTOMER ACCOUNT OUTBOUND')
+				{
+					orderM=498;
+				}
+			if(adapterName == 'SFDC CUSTOMER CASE OUTBOUND')
+				{
+					orderM=514;
+				}
+			if(adapterName == 'NETSUITE ASSET OUTBOUND')
+				{
+					orderM=530;
+				}
+			if(adapterName == 'JIRA REQUEST OUTBOUND')
+				{
+					orderM=546;
+				}
+			if(adapterName == 'JIRA TASK OUTBOUND')
+				{
+					orderM=562;
+				}
+			
+			//var count = 420;
+			var moduleOutbound=["All","New","Inserted","Failed","Updated","Validation Failed","Transformation Failed"];
+			var gr=new GlideRecord('sys_app_module');
+			gr.newRecord();
+			gr.title= beforeSpace+' - Outbound';
+			jadeUtility.setDisplayValue(gr,'application','JadeConnect');
+			jadeUtility.setDisplayValue(gr,'link_type','SEPARATOR');
+			gr.order=orderM;
+			orderM=orderM+1;
+			var integrationFlowDAO = new global.integrationFlowDAO();
+			integrationFlowDAO.insertRecordsInTable(gr);
+			//gr.insert();
+			gr.newRecord();
+			gr.title= 'All';
+			jadeUtility.setDisplayValue(gr,'application','JadeConnect');
+			jadeUtility.setDisplayValue(gr,'link_type','LIST');
+			gr.name = table_name1;
+			gr.order=orderM;
+			orderM=orderM+1;
+			integrationFlowDAO.insertRecordsInTable(gr);
+			for(var i=1;i<moduleOutbound.length;i++)
+				{
+				gr.newRecord();
+				gr.title=moduleOutbound[i];
+				jadeUtility.setDisplayValue(gr,'application','JadeConnect');
+				jadeUtility.setDisplayValue(gr,'link_type','LIST');
+				gr.name = table_name1;
+				gr.filter='transaction.integration.direction=outbound^transaction_status='+moduleOutbound[i];
+				gr.order=orderM;
+				integrationFlowDAO.insertRecordsInTable(gr);
+				orderM=orderM+1;
+			}
+			
+		},
+		/*
+ 		* @createCorrelationTable :
+ 		* Input :   mappedTo table name and adpater name.
+ 		* Output : None
+ 		* Description : It will create correlation table.
+ 		* Name of table will be : ADAPTERNAME(Upper case)+"_CORRELATION"
+ 		*/
+		createCorrelationTable :function(mappedTo,adapterName){
+			jadeConnectLogger.info("JadeConnect : integrationFlowOutboundService : Entry in createCorrelationtable ");
+			var adapterNameWithoutDirection = jadeUtility.subStr(adapterName,0, jadeUtility.lastIndexOf(adapterName," "));
+			
+			
+			if(jadeUtility.indexOf(adapterNameWithoutDirection," ") != -1)
+				adapterNameWithoutDirection = adapterNameWithoutDirection.toString().split(' ').join('_');
+			
+			var table =new GlideRecord('sys_db_object');
+			table.initialize();
+			table.label=jadeUtility.toUpperCase(adapterNameWithoutDirection)+'_CORRELATION';
+			table.name='x_jade_jconnect_'+jadeUtility.toLowerCase(adapterNameWithoutDirection)+'_correlation';
+			jadeUtility.setDisplayValue(table,'sys_scope','Global');
+			table.create_access = 'true';
+			table.read_access='true';
+			table.update_access='true';
+			jadeUtility.setDisplayValue(table,'access','public');
+			var integrationFlowDAO = new global.integrationFlowDAO();
+			integrationFlowDAO.insertRecordsInTable(table);
+			var internalType=["String","Reference","Choice"];
+			var columnLabel=["Id",mappedTo+" id","Status"];
+			var columnName=["id",mappedTo+"_id","status"];
+			var dic =new GlideRecord('sys_dictionary');
+			for(var i=0;i<columnLabel.length;i++)
+				{
+				dic.initialize();
+				dic.name=table.name;
+				jadeUtility.setDisplayValue(dic,'sys_scope','Global');
+				dic.column_label=columnLabel[i];
+				dic.element=columnName[i];
+				dic.active=true;
+				jadeUtility.setDisplayValue(dic,'internal_type',internalType[i]);
+				if(dic.getDisplayValue('internal_type')=='Reference')
+					{
+					dic.reference=mappedTo;
+				}
+				integrationFlowDAO.insertRecordsInTable(dic);
+			}
+			var choiceLabel =["Begin","Failed","In-Process","pass","Transformation Failed","validation failed"];
+			var choiceValue=["begin","failed","In-Process","pass","transformation failed","validation failed"];
+			var choice =new GlideRecord('sys_choice');
+			for(var j=0;j<choiceLabel.length;j++)
+				{
+				choice.initialize();
+				choice.name=table.name;
+				choice.element='u_status';
+				choice.label=choiceLabel[j];
+				choice.value=choiceValue[j];
+				choice.sequence=j+1;
+				integrationFlowDAO.insertRecordsInTable(choice);
+			}
+		},
+		
+		
+		type: 'integrationFlowOutboundService'
+	};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2016-07-28 10:38:44</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>95e842c7db3c2200c6c9b20ebf9619ab</sys_id>
+        <sys_mod_count>59</sys_mod_count>
+        <sys_name>integrationFlowOutboundService</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_95e842c7db3c2200c6c9b20ebf9619ab</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-04-26 05:05:59</sys_updated_on>
+    </sys_script_include>
+</record_update>

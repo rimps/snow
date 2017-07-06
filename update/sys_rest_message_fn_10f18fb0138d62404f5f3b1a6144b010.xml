@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_rest_message_fn">
+    <sys_rest_message_fn action="INSERT_OR_UPDATE">
+        <authentication_type/>
+        <basic_auth_password>+bcMiDUGhb5vP/6QfjLqcg==</basic_auth_password>
+        <basic_auth_profile/>
+        <basic_auth_user>siddhartha.kadiyala</basic_auth_user>
+        <content/>
+        <function_name>post</function_name>
+        <lock>false</lock>
+        <oauth2_profile/>
+        <protocol_name/>
+        <rest_endpoint>https://${instance_url}/rest/api/2/search</rest_endpoint>
+        <rest_message display_value="JadeConnect : JIRA GetIssues">522187b0138d62404f5f3b1a6144b097</rest_message>
+        <sys_class_name>sys_rest_message_fn</sys_class_name>
+        <sys_created_by>siddhartha.kadiyala</sys_created_by>
+        <sys_created_on>2016-08-03 00:57:06</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>10f18fb0138d62404f5f3b1a6144b010</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>post</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_rest_message_fn_10f18fb0138d62404f5f3b1a6144b010</sys_update_name>
+        <sys_updated_by>siddhartha.kadiyala</sys_updated_by>
+        <sys_updated_on>2016-08-03 00:57:06</sys_updated_on>
+        <use_basic_auth>false</use_basic_auth>
+        <use_mid_server/>
+        <use_mutual_auth>false</use_mutual_auth>
+    </sys_rest_message_fn>
+</record_update>

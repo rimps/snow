@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.JadeConnectLogger</api_name>
+        <client_callable>false</client_callable>
+        <description>This will helps to register the logs to system log table</description>
+        <name>JadeConnectLogger</name>
+        <script><![CDATA[/*
+ *  Use of this script to print logs in system logs table by the help of available methods. Manage log printing by the help of system property.
+ *
+ * @method {log}
+ * @param1 {String} {msg} - {It must be the message, which have to print in system log tables} {Mandatory}
+ * @param2 {Object} {obj} - {It must be the current object of the caller} {optional}
+
+ * @return {void} {no return type declared}
+ */
+
+
+var JadeConnectLogger = Class.create();
+var logEnable;
+JadeConnectLogger.prototype = {
+	initialize: function() {
+		logEnable = gs.getProperty(gs.getCurrentScopeName()+".com.jadeconnect.log.enable");
+		
+	},
+	
+	
+	info : function(msg){
+		
+		if(logEnable=="true"){
+			
+			gs.info(msg);
+		}
+		
+		
+	},
+	
+	debug : function(msg){
+		
+		if(logEnable=="true"){
+			
+			gs.debug(msg);
+		}
+		
+	},
+	
+	error : function(msg){
+		
+		if(logEnable=="true"){
+			
+			gs.error(msg);
+		}
+	},
+	
+	type: 'JadeConnectLogger'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>shailesh</sys_created_by>
+        <sys_created_on>2016-06-24 12:16:12</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>eeeb93c8db5c2600d999f11ebf9619dd</sys_id>
+        <sys_mod_count>42</sys_mod_count>
+        <sys_name>JadeConnectLogger</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_eeeb93c8db5c2600d999f11ebf9619dd</sys_update_name>
+        <sys_updated_by>chandra</sys_updated_by>
+        <sys_updated_on>2016-07-26 11:30:33</sys_updated_on>
+    </sys_script_include>
+</record_update>

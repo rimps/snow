@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Integration Action" max_length="40" name="x_jade_jconnect_integration_action" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Active" max_length="40" name="active" type="boolean"/>
+        <element calculation="answer = &quot;&quot;;" label="Description" max_length="256" name="description" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Integration" max_length="32" name="integration" reference="x_jade_jconnect_integration" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" label="Name" max_length="40" name="name" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Seeded" max_length="40" name="seeded" type="boolean"/>
+        <element label="Sequence" max_length="80" name="sequence" type="integer"/>
+        <index name="index">
+            <element name="integration"/>
+        </index>
+    </element>
+</database>

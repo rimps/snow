@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_section caption="" section_id="09e38e3c4f231600b3a29efd0210c75f" sys_domain="global" table="x_jade_jconnect_integration" version="3" view="sys_popup">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>name</element>
+            <position>0</position>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-20 06:51:50</sys_created_on>
+            <sys_id>c9e38e3c4f231600b3a29efd0210c75f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration" sys_domain="global" view="c7402b100a0a0b8400cf971d83ee4384">09e38e3c4f231600b3a29efd0210c75f</sys_ui_section>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-20 06:51:50</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.begin_split</element>
+            <position>1</position>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-20 06:51:50</sys_created_on>
+            <sys_id>0de38e3c4f231600b3a29efd0210c75f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration" sys_domain="global" view="c7402b100a0a0b8400cf971d83ee4384">09e38e3c4f231600b3a29efd0210c75f</sys_ui_section>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-20 06:51:50</sys_updated_on>
+            <sys_user/>
+            <type>.begin_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>connection</element>
+            <position>2</position>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-20 06:51:50</sys_created_on>
+            <sys_id>4de38e3c4f231600b3a29efd0210c75f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration" sys_domain="global" view="c7402b100a0a0b8400cf971d83ee4384">09e38e3c4f231600b3a29efd0210c75f</sys_ui_section>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-20 06:51:50</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>adapter</element>
+            <position>3</position>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-20 06:51:50</sys_created_on>
+            <sys_id>8de38e3c4f231600b3a29efd0210c75f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration" sys_domain="global" view="c7402b100a0a0b8400cf971d83ee4384">09e38e3c4f231600b3a29efd0210c75f</sys_ui_section>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-20 06:51:50</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>4</position>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-20 06:51:50</sys_created_on>
+            <sys_id>cde38e3c4f231600b3a29efd0210c75f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration" sys_domain="global" view="c7402b100a0a0b8400cf971d83ee4384">09e38e3c4f231600b3a29efd0210c75f</sys_ui_section>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-20 06:51:50</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>direction</element>
+            <position>5</position>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-20 06:51:50</sys_created_on>
+            <sys_id>01e38e3c4f231600b3a29efd0210c760</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration" sys_domain="global" view="c7402b100a0a0b8400cf971d83ee4384">09e38e3c4f231600b3a29efd0210c75f</sys_ui_section>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-20 06:51:50</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption/>
+            <header>false</header>
+            <name>x_jade_jconnect_integration</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-20 06:51:49</sys_created_on>
+            <sys_customer_update>true</sys_customer_update>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>09e38e3c4f231600b3a29efd0210c75f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_jade_jconnect_integration</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_ui_section_09e38e3c4f231600b3a29efd0210c75f</sys_update_name>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-20 06:51:49</sys_updated_on>
+            <sys_user/>
+            <title>false</title>
+            <view display_value="Sys_popup" name="sys_popup">c7402b100a0a0b8400cf971d83ee4384</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

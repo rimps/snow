@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Integration" max_length="40" name="x_jade_jconnect_integration" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Adapter" max_length="32" name="adapter" reference="x_jade_jconnect_adapter" reference_qual="javascript: 'application='+current.connection.application &amp;&amp; 'direction='+current.direction;" type="reference" use_reference_qualifier="advanced"/>
+        <element calculation="answer = &quot;&quot;;" label="Connection" max_length="32" name="connection" reference="x_jade_jconnect_connection" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" label="Description" max_length="256" name="description" type="string"/>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="Direction" max_length="40" name="direction" type="choice">
+            <choice>
+                <element label="Inbound" value="inbound"/>
+                <element label="Outbound" value="outbound"/>
+            </choice>
+        </element>
+        <element calculation="answer = &quot;&quot;;" label="Name" max_length="40" name="name" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="TableName" max_length="100" name="tablename" type="string"/>
+        <index name="index">
+            <element name="adapter"/>
+        </index>
+        <index name="index2">
+            <element name="connection"/>
+        </index>
+    </element>
+</database>

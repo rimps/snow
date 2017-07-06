@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>adapter</field>
+        <global>true</global>
+        <messages/>
+        <name>check sequence</name>
+        <order/>
+        <script><![CDATA[function onSubmit() {
+   //Type appropriate comment here, and begin script below
+   if(g_form.getValue('sequence')>=1&&g_form.getValue('sequence')<=100)
+		{
+		return true;
+		}
+	else
+		{
+			g_form.showErrorBox("sequence", "number should be between 1 to 100");
+			return false;
+		}
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>neeru</sys_created_by>
+        <sys_created_on>2016-07-18 07:01:04</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path/>
+        <sys_id>3aab75f7db642e00d999f11ebf961947</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>check sequence</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_client_3aab75f7db642e00d999f11ebf961947</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2016-07-18 07:01:04</sys_updated_on>
+        <table>x_jade_jconnect_adapter_validation</table>
+        <type>onSubmit</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

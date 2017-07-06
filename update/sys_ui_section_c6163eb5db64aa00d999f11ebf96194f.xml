@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_section caption="" section_id="c6163eb5db64aa00d999f11ebf96194f" sys_domain="global" table="x_jade_jconnect_adapter_condition" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>adapter</element>
+            <position>0</position>
+            <sys_created_by>chandra</sys_created_by>
+            <sys_created_on>2016-07-12 06:07:54</sys_created_on>
+            <sys_id>c2163eb5db64aa00d999f11ebf961952</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_adapter_condition" sys_domain="global" view="Default view">c6163eb5db64aa00d999f11ebf96194f</sys_ui_section>
+            <sys_updated_by>chandra</sys_updated_by>
+            <sys_updated_on>2016-07-12 06:07:54</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>condition</element>
+            <position>1</position>
+            <sys_created_by>chandra</sys_created_by>
+            <sys_created_on>2016-07-12 06:07:54</sys_created_on>
+            <sys_id>46163eb5db64aa00d999f11ebf961952</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_adapter_condition" sys_domain="global" view="Default view">c6163eb5db64aa00d999f11ebf96194f</sys_ui_section>
+            <sys_updated_by>chandra</sys_updated_by>
+            <sys_updated_on>2016-07-12 06:07:54</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption/>
+            <header>false</header>
+            <name>x_jade_jconnect_adapter_condition</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>chandra</sys_created_by>
+            <sys_created_on>2016-07-12 06:07:54</sys_created_on>
+            <sys_customer_update>true</sys_customer_update>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>c6163eb5db64aa00d999f11ebf96194f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_jade_jconnect_adapter_condition</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_ui_section_c6163eb5db64aa00d999f11ebf96194f</sys_update_name>
+            <sys_updated_by>chandra</sys_updated_by>
+            <sys_updated_on>2016-07-12 06:07:54</sys_updated_on>
+            <sys_user/>
+            <title>true</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

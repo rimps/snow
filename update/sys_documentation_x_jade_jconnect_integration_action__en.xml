@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_documentation element="" label="Integration Action" language="en" table="x_jade_jconnect_integration_action">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element/>
+            <help/>
+            <hint/>
+            <label>Integration Action</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_action</name>
+            <plural>Integration Actions</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-17 01:01:07</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>e2d6d57f0f171e008320f08ce1050e35</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Integration Action</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_documentation_x_jade_jconnect_integration_action__en</sys_update_name>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-17 01:01:07</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

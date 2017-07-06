@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_documentation element="auth" label="Auth" language="en" table="x_jade_jconnect_application">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>auth</element>
+            <help/>
+            <hint/>
+            <label>Auth</label>
+            <language>en</language>
+            <name>x_jade_jconnect_application</name>
+            <plural>Auths</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>neeru</sys_created_by>
+            <sys_created_on>2017-03-24 05:08:43</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>a9f573730fe53200194c87ece1050eb5</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Auth</sys_name>
+            <sys_package display_value="Global" source="global">global</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_documentation_x_jade_jconnect_application_auth_en</sys_update_name>
+            <sys_updated_by>neeru</sys_updated_by>
+            <sys_updated_on>2017-03-24 05:08:43</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

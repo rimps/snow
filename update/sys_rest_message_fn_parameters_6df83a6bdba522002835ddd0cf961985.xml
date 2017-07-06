@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_rest_message_fn_parameters">
+    <sys_rest_message_fn_parameters action="INSERT_OR_UPDATE">
+        <name>body</name>
+        <rest_message_function display_value="post">9efbc374138d62404f5f3b1a6144b0aa</rest_message_function>
+        <sys_class_name>sys_rest_message_fn_parameters</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2016-09-05 09:53:02</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>6df83a6bdba522002835ddd0cf961985</sys_id>
+        <sys_mod_count>22</sys_mod_count>
+        <sys_name>body</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_rest_message_fn_parameters_6df83a6bdba522002835ddd0cf961985</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-05-12 12:36:14</sys_updated_on>
+        <type>string</type>
+        <value>{&#13;
+  "fields": {&#13;
+    "summary": "Test0000000",&#13;
+    "description": "",&#13;
+    "project": {&#13;
+      "key": "PROJ"&#13;
+    },&#13;
+    "issuetype": {&#13;
+      "name": "Task"&#13;
+    },&#13;
+"assignee": { &#13;
+ "name": "richa.gupta"&#13;
+}&#13;
+  }&#13;
+}</value>
+    </sys_rest_message_fn_parameters>
+</record_update>

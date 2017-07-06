@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.POPULATE_JIRA_REQUEST_INBOUND</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>POPULATE_JIRA_REQUEST_INBOUND</name>
+        <script><![CDATA[var POPULATE_JIRA_REQUEST_INBOUND = Class.create();
+var jadeUtility;
+POPULATE_JIRA_REQUEST_INBOUND.prototype = {
+    initialize: function() {
+		jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+		jadeUtility= new global.JadeUtility();
+    },
+	_createErrorIncident: function(detail, err, transId){
+		var inc = new GlideRecord("incident");
+		inc.addQuery("u_business_service.name", "ServiceNow");
+		inc.addQuery('contact_type','Jira Integration');
+		inc.addQuery('caller_id.name','ServiceNow JIRA Integration');
+		inc.addQuery('state','NOT IN','6,7,8');
+		inc.query();
+		if(inc.next()) {
+			inc.work_notes = 'Jira response failed due to Connectivity Issue. '+err;
+			inc.update();
+		}else{
+					
+			var newinc = new GlideRecord('incident');
+			newinc.initialize();
+			jadeUtility.setDisplayValue(newinc,'contact_type','Jira Integration');
+			jadeUtility.setDisplayValue(newinc,'u_category','IT');
+			jadeUtility.setDisplayValue(newinc,'u_business_service','ServiceNow');
+			jadeUtility.setDisplayValue(newinc,'impact','2-Medium');
+			jadeUtility.setDisplayValue(newinc,'caller_id','ServiceNow JIRA Integration');							
+		/*	newinc.setDisplayValue('contact_type','Jira Integration');
+			newinc.setDisplayValue('u_category','IT');
+			newinc.setDisplayValue('u_business_service','ServiceNow');
+			newinc.setDisplayValue('impact','2-Medium');
+			newinc.setDisplayValue('urgency','2-Medium');
+			newinc.setDisplayValue('caller_id','ServiceNow JIRA Integration');*/
+			if(detail == 'connectivity'){
+				newinc.short_description = 'Jira Connectivity Failure';
+				newinc.description = 'There is some error in Jira connectivity. Admin users can check the credentials in Connection module of Jadeconnect application.    '+err;
+			}else
+			{
+				newinc.short_description = 'Jira Failure for Transaction '+transId;
+				newinc.description = 'There is some error in Jira for Transaction '+transId+'     '+err;
+			}
+			newinc.insert();
+			
+		}
+	
+},
+process: function(object) {
+		var gr = new GlideRecord('x_jade_jconnect_connection');
+		gr.addQuery('application.name','JIRA');
+		gr.query();
+		while(gr.next()) {
+			try {
+				
+				var checkRes = this.getResponse(gr,object);
+				if (!checkRes)
+					break;
+				
+			} catch(ex) {
+				var message = ex.getMessage();
+				jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_REQUEST_INBOUND :"+message);
+				
+			}
+			
+		}
+	},
+	getResponse :function(gr,object)
+	{
+		var r = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : JIRA GetIssues', 'get');
+		r.setStringParameterNoEscape('instance_url', gr.url);
+		 var query = object.filterCondition;
+		r.setStringParameterNoEscape('jql_query', query);
+		var response = r.execute();
+		var responseBody = response.getBody();
+		var httpStatus = response.getStatusCode();
+		if(httpStatus>300||httpStatus==0)
+			{
+				this._createErrorIncident('connectivity',responseBody,'');
+				var err = new GlideRecord('u_errors');
+				err.initialize();
+				err.u_error_description="Error in connection";
+				err.u_response= "Error in connection. Check your credentials.";
+				err.u_integration=object.integration;
+				var integrationFlowDAO = new global.integrationFlowDAO();
+				integrationFlowDAO.insertRecordsInTable(err);
+				return false;
+			}else{
+				this.getData(responseBody,httpStatus,gr,object);
+				return true;
+			}
+	},
+	getData: function(responseBody,httpStatus,gr,object)
+	{
+		if(httpStatus < 300) {
+			
+			//create inbound transaction record
+	 var trans_sys_id =this.insertRecordInTransationTable(responseBody,object);
+			var json = new global.JSON();
+			responseBody = json.decode(responseBody);
+			//jadeConnectLogger.info(responseBody);
+			jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_REQUEST_INBOUND : Total Size : "+responseBody.total);
+			if(responseBody.total > 0) {
+				var data1 = responseBody.issues.length;
+				for(var i=0; i<data1; i++) {
+					try {
+						//jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_INBOUND : Pulling data for issue id: "+data1[i].id);
+						//var restMessage = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : JIRA GetIssueById', 'get');
+						//restMessage.setStringParameter('access_token', gr.access_token);
+						//restMessage.setStringParameter('instance_url', gr.url);
+						//restMessage.setStringParameter('issue_key', data1[i].id);
+						//var response = restMessage.execute();
+						//var responseBody1 = response.getBody();
+						//var httpStatus1 = response.getStatusCode();
+						
+						//if(httpStatus1 < 300) {
+							this.insetRecordsInStagingTable(responseBody.issues[i]);
+							this.updateTransactionStatus(trans_sys_id,'parsed');
+							
+						//}
+						//else {
+							//jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_INBOUND : Individual issue fetch failed");
+						//}
+					} catch(ex) {
+						jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_REQUEST_INBOUND : Exception: "+ex);
+						this._createErrorIncident('other',responseBody, trans_sys_id);
+						this.updateTransactionStatus(trans_sys_id,'failed');
+					}
+					
+				}
+			}
+			this.updateTransactionStatus(trans_sys_id,'parsed');
+		}
+	},
+	insertRecordInTransationTable : function(responseBody,object)
+	{
+		var grTansac = new GlideRecord("x_jade_jconnect_transaction");
+		grTansac.initialize();
+		grTansac.integration = object.integration;
+		jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_REQUEST_INBOUND : Integration "+object.integration);
+		grTansac.run_time = object.runTime;
+		jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_REQUEST_INBOUND : Time "+object.runTime);
+		grTansac.status = "new";
+		grTansac.job = object.job;
+		jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_REQUEST_INBOUND : JobName :"+object.job);
+		grTansac.message = responseBody;
+		trans_sys_id = grTansac.insert();
+		jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_REQUEST_INBOUND : Got List of new/updated ids"+trans_sys_id);
+		return trans_sys_id;
+	},
+	insetRecordsInStagingTable :function(responseBody1)
+	{
+		jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_REQUEST_INBOUND : Individual issue: "+responseBody1.key);
+		//jadeConnectLogger.info("JadeConnect :POPULATE_JIRA_INBOUND : Individual issue: "+responseBody1.fields.get('customfield_10016'));
+		//var json = new global.JSON(); 
+		//responseBody1 = json.decode(responseBody1.fields);
+		
+		var sdf = new GlideRecord("u_x_jade_jconnect_jira_request_to_sc_request_data_fields");
+		sdf.initialize();
+		/*var arr = responseBody1.fields.split(',');
+		for(var j=0 ; j<arr.length;j++) {
+			var fieldValue = arr[j].split(":");
+			sdf["u_" + fieldValue[0].toLowerCase()] = fieldValue[1];
+		}*/
+		sdf["u_issuetype"] = responseBody1.fields.issuetype;
+		sdf["u_summary"] = responseBody1.fields.summary;
+		sdf["u_status"] = responseBody1.fields.status.name;
+		sdf["u_priority"] = responseBody1.fields.priority.name;
+		sdf["u_description"] = responseBody1.fields.description;
+		sdf["u_id"] = responseBody1.key;
+		sdf["u_issuekey"] = responseBody1.key;
+		//sdf.setDisplayVlaue("assigned_to",responseBody1.fields.assignee.name);
+		sdf.transaction = trans_sys_id;
+		sdf.transaction_status = "new";
+		sdf.insert();
+	},
+	updateTransactionStatus : function(trans_sys_id,traStatus)
+	{
+		var grTansac = new GlideRecord("x_jade_jconnect_transaction");
+		grTansac.addQuery('sys_id',trans_sys_id);
+		grTansac.query();
+		if(grTansac.next())
+			{
+				grTansac.status=traStatus;
+			}
+		grTansac.update();
+	},
+    type: 'POPULATE_JIRA_REQUEST_INBOUND'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>neeru</sys_created_by>
+        <sys_created_on>2017-03-30 07:28:07</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>492f03750f317200194c87ece1050e5f</sys_id>
+        <sys_mod_count>11</sys_mod_count>
+        <sys_name>POPULATE_JIRA_REQUEST_INBOUND</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_492f03750f317200194c87ece1050e5f</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-05-31 06:57:43</sys_updated_on>
+    </sys_script_include>
+</record_update>

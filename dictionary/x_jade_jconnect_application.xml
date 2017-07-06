@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Application" max_length="40" name="x_jade_jconnect_application" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Auth" max_length="120" name="auth" type="string"/>
+        <element calculation="answer = &quot;&quot;;" display="true" label="Name" max_length="40" name="name" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Type" max_length="120" name="type" type="string"/>
+    </element>
+</database>

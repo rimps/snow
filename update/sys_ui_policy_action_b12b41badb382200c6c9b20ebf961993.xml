@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_ui_policy_action">
+    <sys_ui_policy_action action="INSERT_OR_UPDATE">
+        <disabled>ignore</disabled>
+        <field>run_dayofweek</field>
+        <mandatory>ignore</mandatory>
+        <sys_class_name>sys_ui_policy_action</sys_class_name>
+        <sys_created_by>chandra</sys_created_by>
+        <sys_created_on>2016-07-27 11:10:31</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>b12b41badb382200c6c9b20ebf961993</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>run_dayofweek</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_ui_policy_action_b12b41badb382200c6c9b20ebf961993</sys_update_name>
+        <sys_updated_by>chandra</sys_updated_by>
+        <sys_updated_on>2016-07-27 11:10:31</sys_updated_on>
+        <table>x_jade_jconnect_integration_scheduled_pull</table>
+        <ui_policy display_value="Display weekdays">3fdacd7adb382200c6c9b20ebf9619f4</ui_policy>
+        <visible>true</visible>
+    </sys_ui_policy_action>
+</record_update>

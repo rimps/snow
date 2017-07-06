@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Transaction Detail Validation Status" max_length="40" name="x_jade_jconnect_transaction_detail_validation_status" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Error" max_length="40" name="error" type="string"/>
+        <element calculation="answer = &quot;&quot;;" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element label="Pass" sequence="100" value="pass"/>
+                <element label="Fail" sequence="200" value="fail"/>
+            </choice>
+        </element>
+        <element calculation="answer = &quot;&quot;;" label="Transaction Detail" max_length="32" name="transaction_detail" reference="x_jade_jconnect_transaction_detail" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" label="Validation" max_length="32" name="validation" reference="x_jade_jconnect_integration_validation" type="reference"/>
+        <index name="index">
+            <element name="validation"/>
+        </index>
+        <index name="index2">
+            <element name="transaction_detail"/>
+        </index>
+    </element>
+</database>

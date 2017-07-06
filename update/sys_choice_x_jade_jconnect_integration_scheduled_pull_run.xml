@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="run" table="x_jade_jconnect_integration_scheduled_pull" version="3">
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>run</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Daily</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_scheduled_pull</name>
+            <sequence/>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 09:37:55</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>a853d7980f3b52008320f08ce1050e95</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 09:37:55</sys_updated_on>
+            <value>daily</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>run</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Monthly</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_scheduled_pull</name>
+            <sequence/>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 09:40:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>398357980f3b52008320f08ce1050e10</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 09:40:17</sys_updated_on>
+            <value>monthly</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>run</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Once</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_scheduled_pull</name>
+            <sequence/>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 09:41:12</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>6124df980f3b52008320f08ce1050e73</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 09:41:12</sys_updated_on>
+            <value>once</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>run</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>On Demand</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_scheduled_pull</name>
+            <sequence/>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 09:42:25</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>d36493d80f3b52008320f08ce1050e4a</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 09:42:25</sys_updated_on>
+            <value>on_demand</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value>parent</dependent_value>
+            <element>run</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>After Parent Runs</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_scheduled_pull</name>
+            <sequence/>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 09:43:26</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1aa493d80f3b52008320f08ce1050e4b</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 09:43:26</sys_updated_on>
+            <value>periodically</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>run</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Periodically</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_scheduled_pull</name>
+            <sequence/>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 09:42:54</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>568417980f3b52008320f08ce1050e04</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 09:42:54</sys_updated_on>
+            <value>periodically</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>run</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Weekly</label>
+            <language>en</language>
+            <name>x_jade_jconnect_integration_scheduled_pull</name>
+            <sequence/>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 09:38:25</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>e363db980f3b52008320f08ce1050ea8</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 09:38:25</sys_updated_on>
+            <value>weekly</value>
+        </sys_choice>
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>run</element>
+            <name>x_jade_jconnect_integration_scheduled_pull</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-31 09:37:55</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>1096fb730fe53200194c87ece1050e2c</sys_id>
+            <sys_mod_count>6</sys_mod_count>
+            <sys_name>run</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_choice_x_jade_jconnect_integration_scheduled_pull_run</sys_update_name>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-31 09:42:54</sys_updated_on>
+        </sys_choice_set>
+    </sys_choice>
+</record_update>

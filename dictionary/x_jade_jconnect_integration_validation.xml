@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Integration Validation" max_length="40" name="x_jade_jconnect_integration_validation" type="collection">
+        <element calculation="answer = &quot;&quot;;" label="Active" max_length="40" name="active" type="boolean"/>
+        <element calculation="answer = &quot;&quot;;" label="Custom Script" max_length="100000" name="custom_script" type="script"/>
+        <element calculation="answer = &quot;&quot;;" label="Description" max_length="256" name="description" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Fields" max_length="4000" name="fields" reference="x_jade_jconnect_integration_mapping" reference_qual="javascript:'integration='+current.integration" type="glide_list" use_reference_qualifier="advanced"/>
+        <element calculation="answer = &quot;&quot;;" label="Integration" max_length="32" name="integration" reference="x_jade_jconnect_integration" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" label="Name" max_length="40" name="name" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Seeded" max_length="40" name="seeded" type="boolean"/>
+        <element label="Sequence" mandatory="true" max_length="40" name="sequence" type="integer"/>
+        <element label="Use Custom Script" max_length="40" name="use_custom_script" type="boolean"/>
+        <index name="index">
+            <element name="integration"/>
+        </index>
+    </element>
+</database>

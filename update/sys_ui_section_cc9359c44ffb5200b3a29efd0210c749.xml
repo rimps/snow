@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_section caption="" section_id="cc9359c44ffb5200b3a29efd0210c749" sys_domain="global" table="x_jade_jconnect_integration_mapping" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>integration</element>
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>b5dc11fb0f7072002a940cbce1050e56</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.begin_split</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>7ddc11fb0f7072002a940cbce1050e56</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type>.begin_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>source</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>fddc11fb0f7072002a940cbce1050e56</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>source_table</element>
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>71dc11fb0f7072002a940cbce1050e57</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>source_field</element>
+            <position>4</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>f1dc11fb0f7072002a940cbce1050e57</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>default_value</element>
+            <position>5</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>75dc11fb0f7072002a940cbce1050e57</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>6</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>f5dc11fb0f7072002a940cbce1050e57</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>target</element>
+            <position>7</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>79dc11fb0f7072002a940cbce1050e57</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>target_table</element>
+            <position>8</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>f9dc11fb0f7072002a940cbce1050e57</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>target_field</element>
+            <position>9</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>7ddc11fb0f7072002a940cbce1050e57</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>seeded</element>
+            <position>10</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-02-14 11:12:38</sys_created_on>
+            <sys_id>fddc11fb0f7072002a940cbce1050e57</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_jade_jconnect_integration_mapping" sys_domain="global" view="Default view">cc9359c44ffb5200b3a29efd0210c749</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-02-14 11:12:38</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption/>
+            <header>false</header>
+            <name>x_jade_jconnect_integration_mapping</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>richa</sys_created_by>
+            <sys_created_on>2016-05-30 05:40:56</sys_created_on>
+            <sys_customer_update>true</sys_customer_update>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>cc9359c44ffb5200b3a29efd0210c749</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_jade_jconnect_integration_mapping</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_ui_section_cc9359c44ffb5200b3a29efd0210c749</sys_update_name>
+            <sys_updated_by>richa</sys_updated_by>
+            <sys_updated_on>2016-05-30 05:40:56</sys_updated_on>
+            <sys_user/>
+            <title>true</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

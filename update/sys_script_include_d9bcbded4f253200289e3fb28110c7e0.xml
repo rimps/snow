@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.POPULATE_NETSUITE_ASSET_OUTBOUND</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>POPULATE_NETSUITE_ASSET_OUTBOUND</name>
+        <script><![CDATA[var POPULATE_NETSUITE_ASSET_OUTBOUND = Class.create();
+var jadeUtility;
+var jadeConnectLogger;
+var integration_id = '';
+var transaction_id = "";
+var message = "";
+
+POPULATE_NETSUITE_ASSET_OUTBOUND.prototype = {
+	initialize: function() {
+		jadeUtility= new global.JadeUtility();
+		jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+		/*this.transaction_id = "";
+		this.integration_id = "";
+		this.message = "";*/
+	},
+	
+	process: function(inputMessage, integration) {
+		
+		gs.info("INside process");
+		//save values
+		integration_id = integration;
+		gs.info("INside process integration id : "+integration_id);
+		message = inputMessage;
+		gs.info("INside process Message : "+message);
+		gs.info(message.toString());
+		gs.info(message.sys_id);
+		//create new transaction record
+		transaction_id = this._writeToTransaction();
+		jadeConnectLogger.info("JadeConnect :POPULATE_NETSUITE_ASSET_OUTBOUND :transaction_id "+transaction_id);
+		if(transaction_id == "") {
+			jadeConnectLogger.info("JadeConnect :POPULATE_NETSUITE_ASSET_OUTBOUND : Transaction record creation failed");
+		}
+		else {
+			jadeConnectLogger.info("JadeConnect :POPULATE_NETSUITE_ASSET_OUTBOUND : New transaction record created with sys_id: "+transaction_id);
+		}
+		
+		//create new correlation
+		var cor_id = this._writeToCorrelation(message.sys_id);
+		if(!cor_id) {
+			jadeConnectLogger.info("JadeConnect :POPULATE_NETSUITE_ASSET_OUTBOUND : Correlation record not created");
+		}
+		else {
+			jadeConnectLogger.info("JadeConnect :POPULATE_NETSUITE_ASSET_OUTBOUND : Correlation record created with sys_id: "+ cor_id);
+		}
+		
+		//insert data into staging table
+		var staging_id = this._writeToStagingTable(inputMessage);
+		if(!staging_id) {
+			jadeConnectLogger.info("JadeConnect :POPULATE_NETSUITE_ASSET_OUTBOUND : Staging record not created");
+		}
+		else {
+			jadeConnectLogger.info("JadeConnect :POPULATE_NETSUITE_ASSET_OUTBOUND : Staging record created with sys_id: "+ staging_id);
+		}
+	},
+	
+	_writeToTransaction: function() {
+		
+		//write to transaction table
+		gs.info("Entry in Transaction");
+		var transaction = new GlideRecord("x_jade_jconnect_transaction");
+		transaction.initialize();
+		transaction.integration = integration_id;
+		gs.info("After setting integration id ");
+		gs.info("Message in transaction : "+message.sys_id);
+		transaction.message = message.sys_id;
+		gs.info("Before setting time");
+		transaction.run_time = new GlideDateTime().getDisplayValue();
+		gs.info("After setting time");
+		transaction.status = "new";
+		var sysIdTra = transaction.insert();
+		gs.info("Transaction sysId =  : "+sysIdTra);
+		return sysIdTra;
+	},
+	
+	_writeToStagingTable: function(gr) {
+		gs.info("inside stagingg =="+gr);
+		//write to staging table
+		var staging = new GlideRecord("u_x_jade_jconnect_netsuite_asset_to_cmdb_ci_data_fields");
+		staging.initialize();
+		staging.transaction = transaction_id;
+		staging.transaction_status = "new";
+		
+		var accountRecord = gr;
+		
+		var map = new GlideRecord("x_jade_jconnect_integration_mapping");
+		map.addQuery("integration", integration_id);
+		gs.info('ÍNT ID:'+integration_id);
+		map.query();
+		while(map.next()) {
+		/*	if(map.target_field == "name") {
+				var last2 = (accountRecord["" + map.source_field]).slice(-2);
+				staging["u_" + jadeUtility.toLowerCase(map.target_field)] = last2;
+			}
+			else {*/
+				staging["u_" + jadeUtility.toLowerCase(map.target_field)] = accountRecord["" + map.source_field];
+			gs.info("a: "+staging["u_" + jadeUtility.toLowerCase(map.target_field)]);
+			gs.info("b: "+accountRecord["" + map.source_field]);
+			//}
+		}
+		
+		return staging.insert();
+	},
+	
+	_writeToCorrelation: function(snow_id) {
+		//write to correlation
+		var cor = new GlideRecord("u_x_jade_jconnect_netsuite_asset_correlation");
+		if(!cor.get("u_cmdb_ci_id", snow_id)) {
+			cor.initialize();
+			cor.u_cmdb_ci_id = message.sys_id;
+			cor.u_status = "new";
+			return cor.insert();
+		} else {
+			// do nothing
+			return "";
+		}
+	},
+	
+	type: 'POPULATE_NETSUITE_ASSET_OUTBOUND'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>skadiyala</sys_created_by>
+        <sys_created_on>2017-03-16 20:33:34</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>d9bcbded4f253200289e3fb28110c7e0</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>POPULATE_NETSUITE_ASSET_OUTBOUND</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_d9bcbded4f253200289e3fb28110c7e0</sys_update_name>
+        <sys_updated_by>neeru</sys_updated_by>
+        <sys_updated_on>2017-04-12 14:56:45</sys_updated_on>
+    </sys_script_include>
+</record_update>

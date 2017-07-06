@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element calculation="answer = &quot;&quot;;" label="Connection" max_length="40" name="x_jade_jconnect_connection" type="collection">
+        <element label="Access Token" max_length="120" name="access_token" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Active" max_length="40" name="active" type="boolean"/>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="API" max_length="40" name="api" type="choice">
+            <choice>
+                <element label="REST" value="rest"/>
+                <element label="SOAP" value="soap"/>
+            </choice>
+        </element>
+        <element calculation="answer = &quot;&quot;;" label="Application" max_length="32" name="application" reference="x_jade_jconnect_application" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="Authentication" max_length="40" name="authentication" type="choice">
+            <choice/>
+        </element>
+        <element calculation="answer = &quot;&quot;;" label="Consumer Key" max_length="100" name="consumer_key" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Consumer Secret" max_length="100" name="consumer_secret" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Description" max_length="256" name="description" type="string"/>
+        <element label="Duration" max_length="40" name="duration" type="glide_duration"/>
+        <element calculation="answer = &quot;&quot;;" label="MID Server" max_length="32" name="mid_server" reference="ecc_agent" type="reference"/>
+        <element calculation="answer = &quot;&quot;;" display="true" label="Name" max_length="40" name="name" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Password" max_length="255" name="password" type="password2"/>
+        <element label="Security Token" max_length="100" name="security_token" type="string"/>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element label="Authenticated" sequence="0" value="Authenticated"/>
+                <element label="Not Authenticated" sequence="1" value="Not Authenticated"/>
+                <element label="Authenticating" sequence="2" value="Authenticating"/>
+            </choice>
+        </element>
+        <element calculation="answer = &quot;&quot;;" choice="1" label="Type" max_length="40" name="type" type="choice">
+            <choice/>
+        </element>
+        <element calculation="answer = &quot;&quot;;" label="URL" max_length="120" name="url" type="string"/>
+        <element calculation="answer = &quot;&quot;;" label="Username" max_length="40" name="username" type="string"/>
+        <index name="index">
+            <element name="application"/>
+        </index>
+        <index name="index2">
+            <element name="mid_server"/>
+        </index>
+    </element>
+</database>

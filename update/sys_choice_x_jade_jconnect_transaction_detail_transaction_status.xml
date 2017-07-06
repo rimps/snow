@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="transaction_status" table="x_jade_jconnect_transaction_detail" version="3">
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>transaction_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>New</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sequence>100</sequence>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:21:30</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>6d5792400f6b1e008320f08ce1050eda</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:21:30</sys_updated_on>
+            <value>new</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>transaction_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Inserted</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sequence>200</sequence>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:21:46</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>f06756400f6b1e008320f08ce1050e72</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:21:46</sys_updated_on>
+            <value>inserted</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>transaction_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Failed</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sequence>300</sequence>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:21:58</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>347792400f6b1e008320f08ce1050edd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:21:58</sys_updated_on>
+            <value>failed</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>transaction_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Updated</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sequence>400</sequence>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:22:32</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>e77752000f6b1e008320f08ce1050e6e</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:22:32</sys_updated_on>
+            <value>updated</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>transaction_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Validating</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sequence>500</sequence>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:23:12</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>55a792400f6b1e008320f08ce1050ed0</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:23:12</sys_updated_on>
+            <value>validating</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>transaction_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Validation Failed</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sequence>600</sequence>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:23:34</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>3dc71a8c0f2b1e008320f08ce1050e17</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:23:34</sys_updated_on>
+            <value>validation failed</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>transaction_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Transforming</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sequence>700</sequence>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:23:53</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>23d71a400f6b1e008320f08ce1050e42</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:23:53</sys_updated_on>
+            <value>transforming</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>transaction_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Transformation Failed</label>
+            <language>en</language>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sequence>800</sequence>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:24:45</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>81f7d6400f6b1e008320f08ce1050e2d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:24:45</sys_updated_on>
+            <value>transformation failed</value>
+        </sys_choice>
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>transaction_status</element>
+            <name>x_jade_jconnect_transaction_detail</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>sid</sys_created_by>
+            <sys_created_on>2016-05-18 00:21:30</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>b496fb730fe53200194c87ece1050e61</sys_id>
+            <sys_mod_count>7</sys_mod_count>
+            <sys_name>transaction_status</sys_name>
+            <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+            <sys_update_name>sys_choice_x_jade_jconnect_transaction_detail_transaction_status</sys_update_name>
+            <sys_updated_by>sid</sys_updated_by>
+            <sys_updated_on>2016-05-18 00:23:53</sys_updated_on>
+        </sys_choice_set>
+    </sys_choice>
+</record_update>

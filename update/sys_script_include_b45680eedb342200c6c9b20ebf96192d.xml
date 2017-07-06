@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.RefreshSourceAttributeService</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>RefreshSourceAttributeService</name>
+        <script><![CDATA[var RefreshSourceAttributeService = Class.create();
+var jadeconnectLogger;
+var jadeUtility;
+RefreshSourceAttributeService.prototype = {
+    initialize: function() {
+		jadeconnectLogger = new x_jade_jconnect.JadeConnectLogger();
+		jadeUtility = new global.JadeUtility();
+    },
+	
+	/*
+	@fieldCalculation;
+	* Input : Tablename, ApplicationName,AdapterName
+	* Output: True/False
+	* Functionality: Create new column in Intermediate table if new attribute found in outer application.
+	*/	
+	fieldCalculation : function(tableName,appName,adapterName){
+		
+		jadeconnectLogger.info("JadeConnect : RefreshSourceAttributeService : Entry in fieldCalculation");
+		var refreshDAO = new global.RefreshSourceAttributeDAO();
+		var adpName = adapterName;
+		adpName = jadeUtility.toLowerCase(adpName);
+		var scriptName = adpName+"_fieldPopup";
+		if(scriptName.indexOf(" ") != -1)
+			scriptName = scriptName.toString().split(' ').join('_');
+		
+		var response = this.getWrapperName(scriptName);
+							
+		var fields = response.toString().split(",");
+		
+		jadeconnectLogger.info("JadeConnect : RefreshSourceAttributeService : Source fields :"+fields);
+				
+		var numberOfFields = fields.length;
+		jadeconnectLogger.info("JadeConnect : RefreshSourceAttributeService : No of Fields :"+numberOfFields);
+		
+		var gr = refreshDAO.getRecord('sys_dictionary',tableName);
+			
+		if(gr.getRowCount() != numberOfFields){
+			this.checkAndCreateSourceAttribute(fields,tableName);
+			return true;
+		}
+		return false;
+	},
+	
+	/*
+	@checkAndCreateSourceAttribute
+	* Input : fields and tablename as input parameter.
+	* Output : None.
+	* Functionality : It will check the new fields inside the fields 
+				      which are imported from outer application.
+					  If new field found, then create new column in Intermediate table.
+	*/
+	checkAndCreateSourceAttribute: function(fields,tableName){
+		jadeconnectLogger.info("JadeConnect : RefreshSourceAttributeService : Entry in checkAndCreateSourceAttribute");
+		for(var i=0; i<fields.length; i++) {
+				var counter = 0;
+				var item = fields[i].split("~");
+				var gr1 = new GlideRecord('sys_dictionary');
+				gr1.addQuery('name',tableName);
+				gr1.query();
+				while(gr1.next()){
+					if('u_'+item[1].toLowerCase() == gr1.element){
+						counter = 1;
+						break;
+					}
+				}
+				if(counter != 1){
+					
+					var tabcol=new GlideRecord('sys_dictionary');
+					tabcol.newRecord();
+					tabcol = jadeUtility.setDisplayValue(tabcol,'internal_type','String');
+					//tabcol.setDisplayValue("internal_type",'String');								
+					tabcol.name= tableName.toLowerCase();
+					tabcol.column_label=item[0];
+					tabcol.element='u_'+item[1];
+					tabcol.max_length='250';
+					var refreshDB = new global.RefreshSourceAttributeDAO();
+					refreshDAO.save(tabcol);					
+				}
+				
+			}
+	
+	},
+	/*
+	@getWrapperName:
+	* Input: scriptname
+	* Output: List of comma separeted source fields.
+	* Functionality : It will retrive the ScriptInclude name from GetWrapperName script include 
+	*		         and call the dynamically scriptinclude to get fields from outer application.
+	*/
+	getWrapperName: function(scriptName){
+		jadeconnectLogger.info("JadeConnect : RefreshSourceAttributeService : Entry in getWrapperName");
+		var gr = new global.GetWrapperForName();
+		var wrapperType = gr.getWrapperType(scriptName);
+		var obj = new wrapperType();
+		var response = obj.getSourceFields();
+		return response;
+	
+	},
+
+    type: 'RefreshSourceAttributeService'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>chandra</sys_created_by>
+        <sys_created_on>2016-07-26 11:31:39</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>b45680eedb342200c6c9b20ebf96192d</sys_id>
+        <sys_mod_count>22</sys_mod_count>
+        <sys_name>RefreshSourceAttributeService</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_b45680eedb342200c6c9b20ebf96192d</sys_update_name>
+        <sys_updated_by>chandra</sys_updated_by>
+        <sys_updated_on>2016-07-27 07:06:38</sys_updated_on>
+    </sys_script_include>
+</record_update>

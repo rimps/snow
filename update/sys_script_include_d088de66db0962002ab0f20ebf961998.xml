@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.PROCESS_DATA_FROM_ADAPTER_INBOUND</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>PROCESS_DATA_FROM_ADAPTER_INBOUND</name>
+        <script><![CDATA[var PROCESS_DATA_FROM_ADAPTER_INBOUND = Class.create();
+var jadeConnectLogger;
+var jadeUtility;
+var loggerMessage = "JadeConnect : PROCESS_DATA_FROM_ADAPTER_INBOUND : ";
+var correlationTable = '';
+PROCESS_DATA_FROM_ADAPTER_INBOUND.prototype = {
+	/*
+ 	* @ initialize :
+ 	* Input : None.
+ 	* Output : None.
+ 	* Description : This is the system function, we use it to initialize alll global level variables.
+ 	*/
+	initialize: function() {
+		jadeConnectLogger = new x_jade_jconnect.JadeConnectLogger();
+		jadeUtility = new global.JadeUtility();
+		
+	},
+	
+	/*
+ 	* @ updateDetailTransactionStatus :
+ 	* Input : integration,dataDetails and status(Pass/Fail).
+ 	* Output : None.
+ 	* Description : This function will update the transaction detail table with the new Status.
+ 	*/
+	updateDetailTransactionStatus : function(intergration_id,dataDetail, status){
+		jadeConnectLogger.info(loggerMessage+" Entry inside updateDetailTransactionStatus.");
+		
+		var intTable = new GlideRecord('x_jade_jconnect_integration');
+		intTable.get(intergration_id.sys_id);
+		
+		var updateStatus = new GlideRecord(intTable.tablename);
+		updateStatus.get(dataDetail.sys_id);
+		
+		updateStatus.transaction_status = status;
+		updateStatus.update();
+		
+		jadeConnectLogger.info(loggerMessage+" Exit from updateDetailTransactionStatus.");
+	},
+	
+	/*
+ 	* @ updateCorrelationTable :
+ 	* Input : event_id and status(Pass/Fail).
+ 	* Output : None.
+ 	* Description : This function will update the correlation table with the new Status.
+ 	*/
+	updateCorrelationTable : function(uId, status){
+		jadeConnectLogger.info(loggerMessage+" Entry inside updateCorrelationTable.");
+		var correlationObj = new GlideRecord(correlationTable);//('u_x_jade_jconnect_sfdc_account_correlation');
+		correlationObj.addQuery('u_id',uId);
+		correlationObj.query();
+		if(correlationObj.next()){
+			correlationObj.u_status = status;
+			correlationObj.update();
+		}
+	},
+	
+	/*
+ 	* @ entryInCorrelationTable :
+ 	* Input : data and integration_id.
+ 	* Output : None.
+ 	* Description : This function will insert one new record in correlation table.
+ 	*/
+	entryInCorrelationTable : function(dataDetail,integrationId){
+		jadeConnectLogger.info(loggerMessage+" Entry inside entryInCorrelationTable.");
+		var correlationTab = this.getCorrelationtableName(integrationId.adapter.name);
+		var correlationRec = new GlideRecord(correlationTab);
+		correlationRec.addQuery('u_id',dataDetail.u_id);
+		gs.info("id=="+dataDetail);
+		correlationRec.query();
+		var totalCorrelationRec = correlationRec.getRowCount();
+		gs.info("totalCorrelationRec=="+totalCorrelationRec);
+		if(totalCorrelationRec<=0) {
+			correlationRec.initialize();
+			//correlationRec.u_integration = integrationId;
+			correlationRec.u_id = dataDetail.u_id;
+			gs.info("orrelationRec.u_id="+correlationRec.u_id);
+			correlationRec.u_status = 'in progress';
+			correlationRec.insert();
+		}
+		else {
+			jadeConnectLogger.info(loggerMessage+" Id exist in correlation table : "+totalCorrelationRec);
+		}
+	},
+	/*
+ 	*@ getCorrelationtableName:
+ 	* Input : adapterName
+ 	* Output : correlation table name.
+ 	* Description : This function will take the adaptername as one input and dynamically generate the correlation table and return it.
+ 	*/
+	getCorrelationtableName: function(adapterName){
+		jadeConnectLogger.info(loggerMessage+" Entry inside getCorrelationtableName");
+		var adapterNameWithoutDirection = jadeUtility.subStr(adapterName,0, jadeUtility.lastIndexOf(adapterName," "));
+		
+		if(jadeUtility.indexOf(adapterNameWithoutDirection," ") != -1)
+			adapterNameWithoutDirection = adapterNameWithoutDirection.toString().split(' ').join('_');
+		
+		gs.info("AdapterName : "+adapterNameWithoutDirection);
+		var tableName='u_x_jade_jconnect_'+jadeUtility.toLowerCase(adapterNameWithoutDirection)+'_correlation';
+		
+		correlationTable = tableName;
+		jadeConnectLogger.info(loggerMessage+" Exit from getCorrelationtableName : "+tableName);
+		return tableName;
+	},
+	
+	/*
+ 	* @ callForMapping :
+ 	* Input : integration_id and dataDetail record.
+ 	* Output : None.
+ 	* Description : This function will insert one new record in correlation table.
+ 	*/
+	callForMapping : function(integrationId,dataDetail){
+		jadeConnectLogger.info(loggerMessage+" Entry inside callMapping ");
+		
+		var table = dataDetail.transaction.integration.adapter.mapped_to;
+		jadeConnectLogger.info(loggerMessage+" Servicenow table : "+table);
+		
+		var map = new GlideRecord("x_jade_jconnect_integration_mapping");
+		map.addQuery("integration", integrationId);
+		map.query();
+		
+		//Read the Corelation Table
+		var correlationTab = this.getCorrelationtableName(integrationId.adapter.name);
+		var correlationRec = new GlideRecord(correlationTab);
+		correlationRec.addQuery('u_id',dataDetail.u_id);
+		correlationRec.query();
+		if(correlationRec.next()){
+			var mappedToId = "u_"+integrationId.adapter.mapped_to+"_id";
+			if(correlationRec.getDisplayValue(mappedToId) == '') {
+				
+				var targetTableRec =  new GlideRecord(table);
+				targetTableRec.initialize();
+				
+				while(map.next()) {
+					targetTableRec = this.setValueIn(targetTableRec,table,dataDetail,map);
+					gs.info("targetTableRec= "+targetTableRec);
+				}
+				targetTableRec.insert();
+				this.updateDetailTransactionStatus(integrationId, dataDetail, 'Inserted');
+				jadeConnectLogger.info(loggerMessage+" Company inserted with sys_id - "+targetTableRec.sys_id);
+				
+				correlationRec.setValue(mappedToId,targetTableRec.sys_id);//= targetTableRec.sys_id;
+				correlationRec.u_status='pass';
+				correlationRec.update();
+				
+				var actionIncidentStatus = new GlideRecord("x_jade_jconnect_transaction_detail_action_status");
+				actionIncidentStatus.initialize();
+				actionIncidentStatus.transaction_detail = dataDetail.sys_id;
+				actionIncidentStatus.status = 'pass';
+				
+				var int_action = new GlideRecord("x_jade_jconnect_integration_action");
+				int_action.addQuery("integration", integrationId);
+				int_action.addQuery("name","CONTAINS" ,"Create");
+				int_action.query();
+				while(int_action.next()) {
+					actionIncidentStatus.action = int_action.sys_id;
+					actionIncidentStatus.insert();
+				}
+				
+			} else {
+				jadeConnectLogger.info(loggerMessage+" Record already exists ID - "+dataDetail.u_id);
+				var targetTableRec =  new GlideRecord(table);
+				
+				targetTableRec.get(correlationRec.getValue(mappedToId));
+				gs.info("Row count in targetTabRecord : "+targetTableRec.getRowCount());
+				
+				while(map.next()) {
+					targetTableRec = this.setValueIn(targetTableRec,table,dataDetail,map);
+				}
+				targetTableRec.update();
+				this.updateDetailTransactionStatus(integrationId, dataDetail, 'Updated');
+				correlationRec.status='pass';
+				correlationRec.update();
+				
+				var actionIncidentStatus = new GlideRecord("x_jade_jconnect_transaction_detail_action_status");
+				actionIncidentStatus.initialize();
+				actionIncidentStatus.transaction_detail = dataDetail.sys_id;
+				actionIncidentStatus.status = 'pass';
+				
+				var int_action = new GlideRecord("x_jade_jconnect_integration_action");
+				int_action.addQuery("integration", integrationId);
+				int_action.addQuery("name", "CONTAINS","Update");
+				int_action.query();
+				while(int_action.next()) {
+					actionIncidentStatus.action = int_action.sys_id;
+					actionIncidentStatus.insert();
+				}
+			}
+		}
+	},
+	
+	/*
+ 	* @setValueIn :
+ 	* Input : targettableRec - where value will set, table - MappedTo table, dataDetails - intermediate table record,map - mapping object
+ 	* Output : targettabrec - with all set value.
+ 	* Description : Will set the value to gliderecord.
+ 	*/
+	setValueIn: function(targetTableRec,table,dataDetail,map){
+		jadeConnectLogger.info(loggerMessage+" Entry in setValueIn for setting value.");
+		var transformationsObj = new GlideRecord("x_jade_jconnect_transaction_detail_transformation_status");
+		transformationsObj.addQuery("transaction_detail", dataDetail.sys_id);
+		transformationsObj.addQuery("field",map.source_field);
+		transformationsObj.query();
+		if(transformationsObj.next()) {
+			jadeConnectLogger.info(loggerMessage+" Transforming...");
+			
+			//test print
+			jadeConnectLogger.info("map.source_field = " + map.source_field);
+			jadeConnectLogger.info("transformationsObj.result = " + transformationsObj.result);
+			
+			targetTableRec.setValue(map.target_field,transformationsObj.result);
+		} else {
+			if(map.default_value!=""){
+				targetTableRec.setValue(map.target_field,map.default_value);
+			} else {
+				var sf_field = "u_"+map.source_field;
+				sf_field = sf_field.toLowerCase();
+				gs.info("target field= "+""+map.target_field);
+				if(""+map.target_field == 'comments'){
+					var str=dataDetail.getValue(sf_field);
+					gs.info("string name ="+str);
+					if(str!=null)
+						{
+							
+							var res=str.split(',');
+					for(var i=0;i<res.length;i++)
+						{
+							gs.info("res= "+res[i]);
+						targetTableRec.comments =res[i];
+						}
+				//targetTableRec.comments =dataDetail.getValue(sf_field);
+					}
+				}
+				
+				else{
+					targetTableRec.setValue(""+map.target_field,""+dataDetail.getValue(sf_field));
+				}
+			}
+		}
+		
+		jadeConnectLogger.info(loggerMessage+" After setting value in the object...");
+		return targetTableRec;
+	},
+	
+	
+	callForTransformation : function(integrationId,dataDetail){
+		jadeConnectLogger.info(loggerMessage+" Entry inside callForTransformation .");
+		var transformations = new GlideRecord("x_jade_jconnect_integration_transformation");
+		transformations.addQuery("integration", integrationId);
+		transformations.addQuery("active",true);
+		transformations.orderBy("sequence");
+		transformations.query();
+		var transFlag = true;
+		while(transformations.next()) {
+			
+			var fieldName = transformations.field.source_field;
+			
+			if(fieldName != "") {
+				
+				if(transformations.type == 'script'){
+					var gseTrans = new GlideScopedEvaluator();
+					
+					//the field name has to be converted to snow format
+					var sf_field = "u_" + fieldName;
+					sf_field = sf_field.toLowerCase();
+					gseTrans.putVariable('inputVal', dataDetail.getValue(sf_field));
+					
+					try{
+						var resultTrans = gseTrans.evaluateScript(transformations, 'custom_script');
+						
+						var transRec  = new GlideRecord('x_jade_jconnect_transaction_detail_transformation_status');
+						transRec.initialize();
+						transRec.transformation=transformations.sys_id;
+						transRec.transaction_detail = dataDetail.sys_id;
+						transRec.field=fieldName;
+						
+						if(resultTrans != 'error'){
+							transRec.status = 'pass';//Pass
+							transRec.result=resultTrans;
+							transRec.insert();
+						}else{
+							transRec.status = 'fail';//Fail
+							transRec.insert();
+							
+							this.updateCorrelationTable(dataDetail.u_id,'transformation failed');
+							
+							transFlag = false;
+						}
+						
+						
+					}
+					catch(ex){
+						
+						jadeConnectLogger.error(loggerMessage+" Exception occured inside callForTransformation.");
+						transRec.status = 'fail';//Fail
+						transRec.insert();
+						
+						this.updateCorrelationTable(dataDetail.u_id,'transformation failed');
+						
+						transFlag = false;
+						
+					}
+				}
+			}
+			else {
+				jadeConnectLogger.info(loggerMessage+" Entry in else part callForTransformation .");
+				var transRec  = new GlideRecord('x_jade_jconnect_transaction_detail_transformation_status');
+				transRec.initialize();
+				transRec.transformation=transformations.sys_id;
+				transRec.transaction_detail = dataDetail.sys_id;
+				transRec.error = 'FieldName not defined';
+				transRec.status = 'pass';//Pass
+				transRec.insert();
+			}
+		}
+		return transFlag;
+	},
+	
+	callForValidation : function(integrationId,dataDetail){
+		jadeConnectLogger.info(loggerMessage+" Entry inside callForValidation .");
+		var validations = new GlideRecord("x_jade_jconnect_integration_validation");
+		validations.addQuery("integration", integrationId.sys_id);
+		validations.addQuery("active",true);
+		validations.orderBy("sequence");
+		validations.query();
+		while(validations.next()) {
+			var validationName = validations.name;
+			if(validationName == "Mandatory" || true){
+				if(validations.fields.toString()!=""){
+					var mandatory_fields = validations.fields.toString().split(',');
+					var mandatory_field_in = validations.fields.getDisplayValue().split(',');
+					gs.info("mandatory_fields=="+mandatory_fields+"mandatory_field_in=="+mandatory_field_in);
+					var obj = {};
+					var id = "";
+					for(var i=0; i< mandatory_fields.length; i++){
+						var fieldName = new GlideRecord('x_jade_jconnect_integration_mapping');
+						fieldName.get(mandatory_fields[i]);
+						
+						id = ""+fieldName.source_field;
+						obj[""+id]=""+dataDetail.getValue("u_"+id.toLowerCase());
+					}
+					
+					var gse = new GlideScopedEvaluator();
+					gse.putVariable('gr', obj);
+					gse.putVariable('mandatory_fields', mandatory_field_in);
+					var result = gse.evaluateScript(validations, 'custom_script');
+					
+					var validationObj1  = new GlideRecord('x_jade_jconnect_transaction_detail_validation_status');
+					validationObj1.initialize();
+					validationObj1.validation=validations.sys_id;
+					validationObj1.transaction_detail = dataDetail.sys_id;
+					
+					if(result){
+						validationObj1.status = 'pass';//Pass
+						validationObj1.insert();
+						return true;
+					}else{
+						validationObj1.status = 'fail';//Fail
+						validationObj1.error = 'Mandatory Validation Failed for field:'+id;
+						validationObj1.insert();
+						
+						this.updateCorrelationTable(dataDetail.u_id,'validation failed');
+						
+						var err = new GlideRecord('u_errors');
+						err.initialize();
+						err.u_error_description="Validation Error";
+						err.u_integration=integrationId;
+						err.u_response="Failed due to "+validationName+" validation of field "+id+" for "+ integrationId.adapter.name+" record ID "+dataDetail.u_id;
+						var integrationFlowDAO = new global.integrationFlowDAO();
+						integrationFlowDAO.insertRecordsInTable(err);
+						return false;
+						
+					}
+				}else{
+					jadeConnectLogger.info(loggerMessage+" No Mandatory fields selected.");
+					return true;
+				}
+			}
+		}
+	},
+	/*
+ 	* @ processData :
+ 	* Input : transactionDetails and integration.
+ 	* Output : None.
+ 	* Description : processData is the main function in this scriptinclude. It will internally call all other methods
+ 	*				according to the condition.
+ 	*/
+	processData : function(dataDetail,integrationId){
+		try {
+			this.getCorrelationtableName(integrationId.adapter.name);
+			var adapterName = jadeUtility.toUpperCase(integrationId.adapter.name);
+			jadeConnectLogger.info(loggerMessage+" No Mandatory fields selected.");
+			if(jadeUtility.indexOf(adapterName," ") != -1){
+				adapterName = adapterName.toString().split(' ').join('_');
+				
+			}
+			
+			jadeConnectLogger.info(loggerMessage+" Entry inside processData.");
+			
+			this.entryInCorrelationTable(dataDetail,integrationId);
+			this.updateDetailTransactionStatus(integrationId,dataDetail,'Validating');
+			
+			//Validation
+			var validationResultFlag = true;
+			validationResultFlag = this.callForValidation(integrationId,dataDetail);
+			gs.info("validationResultFlag===="+validationResultFlag);
+			//Perform Transformation in case of Validation Pass
+			var transformationFlag = true;
+			if(validationResultFlag){
+				
+				this.updateDetailTransactionStatus(integrationId,dataDetail,'Transforming');
+				transformationFlag = this.callForTransformation(integrationId,dataDetail);
+				// Perform Mapping/Action in case Transformation Pass
+				if(transformationFlag){
+					
+					this.callForMapping(integrationId,dataDetail);
+				}else{
+					
+					this.updateDetailTransactionStatus(integrationId,dataDetail,'Transformation Failed');
+				}
+				
+			}else{
+				
+				this.updateDetailTransactionStatus(integrationId,dataDetail,'Validation Failed');
+				
+				
+			}
+			gs.info("transformationFlag outside"+transformationFlag);
+			
+		}
+		catch(ex){
+			this.updateDetailTransactionStatus(integrationId,dataDetail,'Failed');
+			jadeConnectLogger.error(loggerMessage+" Exception occured in processData : "+ex);
+			
+			this.updateCorrelationTable(dataDetail.u_id,'fail');
+			
+		}finally{
+			jadeConnectLogger.info(loggerMessage+" Successfully Processed.");
+		}
+		
+	},
+	
+	type: 'PROCESS_DATA_FROM_ADAPTER_INBOUND'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2016-08-08 08:26:09</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>d088de66db0962002ab0f20ebf961998</sys_id>
+        <sys_mod_count>131</sys_mod_count>
+        <sys_name>PROCESS_DATA_FROM_ADAPTER_INBOUND</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_d088de66db0962002ab0f20ebf961998</sys_update_name>
+        <sys_updated_by>richa</sys_updated_by>
+        <sys_updated_on>2017-05-12 13:18:30</sys_updated_on>
+    </sys_script_include>
+</record_update>

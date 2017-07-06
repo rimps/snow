@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_jade_jconnect.JC_SFOAuth</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>JC_SFOAuth</name>
+        <script><![CDATA[var JC_SFOAuth = Class.create();
+JC_SFOAuth.prototype = {
+	initialize: function() {
+	},
+	
+	getToken: function() {
+		gs.info("Inside JC_SFOAuth : getToken");
+		var gr = new GlideRecord('x_jade_jconnect_connection');
+		gr.addQuery("application.name", "SFDC");
+		gr.query();
+		var responseBody = '';
+		if(gr.next()) {
+			try {
+				var restRecord = new sn_ws.RESTMessageV2('x_jade_jconnect.JadeConnect : SFDC OAuth', 'post');
+				restRecord.setStringParameter('client_id', gr.consumer_key);
+				restRecord.setStringParameter('client_secret', gr.consumer_secret);
+				restRecord.setStringParameter('username', gr.username);
+				//restRecord.setStringParameter('grant_type','password');
+				restRecord.setStringParameter('password', gr.password.getDecryptedValue() + gr.security_token);
+				
+				var response = restRecord.execute();
+				responseBody = response.getBody();
+				var httpStatus = response.getStatusCode();
+				gs.info("JC_SFOAuth Script Include :: HTTP Status: "+ httpStatus);
+				
+				if(httpStatus == 200) {
+					gs.info('JC_SFOAuth Script Include :: Received response from salesforce authorization');
+				}
+				else {
+					gs.info('JC_SFOAuth Script Include :: Error while receiving response from Salesforce:\nHTTP Status - '+ httpStatus+'\n'+'Response Body - '+responseBody);
+				}
+			}
+			catch(exception) {
+				var message = exception.getMessage();
+				gs.info("JC_SFOAuth Script Include :: Exception Message "+ message);
+			}
+			
+			var json = new global.JSON();
+			var pojo = json.decode(responseBody);
+			gr.access_token = pojo.access_token ;
+			gr.update();
+		}
+	},
+	
+	type: 'JC_SFOAuth'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-02-15 05:44:25</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_id>070b91480f4972002a940cbce1050ed8</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>JC_SFOAuth</sys_name>
+        <sys_package display_value="JadeConnect" source="x_jade_jconnect">644700fb13df1a00b71a7d004244b0a2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="JadeConnect">644700fb13df1a00b71a7d004244b0a2</sys_scope>
+        <sys_update_name>sys_script_include_070b91480f4972002a940cbce1050ed8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-02-15 07:08:46</sys_updated_on>
+    </sys_script_include>
+</record_update>
